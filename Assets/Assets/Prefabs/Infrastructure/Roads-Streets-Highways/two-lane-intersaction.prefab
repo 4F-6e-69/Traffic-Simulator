@@ -229,9 +229,10 @@ GameObject:
   - component: {fileID: 1663903073025479892}
   - component: {fileID: 6753345373119816489}
   - component: {fileID: 6103798526535529216}
+  - component: {fileID: 7903196282014013039}
   m_Layer: 0
   m_Name: two-lane-intersaction
-  m_TagString: Untagged
+  m_TagString: intersectionLights
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -349,6 +350,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 16.81574, y: 2, z: 16.81574}
   m_Center: {x: -0.0000028610227, y: 1, z: 8.407868}
+--- !u!114 &7903196282014013039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 871344785740461313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e5e0b64800d6ea40b9e97193bd1a4d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1091196158162067447
 GameObject:
   m_ObjectHideFlags: 0

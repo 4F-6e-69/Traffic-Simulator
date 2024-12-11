@@ -187,6 +187,24 @@ public class PathWay
 
     }
 
+    public Vector3 getPosition(int index) {
+        Node tempNode = this.tail;
+
+        if (index >= count/2) {
+            for (int i = count-1; i > index; i--) {
+                tempNode = tempNode.PreviousNode;
+            }
+        }
+
+        if (index < count/2) {
+            for (int i = 0; i < index; i++) {
+                tempNode = tempNode.NextNode;
+            }
+        }
+
+        return tempNode.Position;
+    }
+
     public override string ToString() {
         return "Head: " + head.RoadName + " Tail: " + tail.RoadName + " Count: " + Count;
     }

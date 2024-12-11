@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: -5988258074139847636}
   m_Layer: 0
   m_Name: two-lane-linear-half
-  m_TagString: Untagged
+  m_TagString: straight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

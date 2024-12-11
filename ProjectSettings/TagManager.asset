@@ -7,6 +7,8 @@ TagManager:
   - road
   - spawn
   - destination
+  - straight
+  - intersectionLights
   layers:
   - Default
   - TransparentFX
