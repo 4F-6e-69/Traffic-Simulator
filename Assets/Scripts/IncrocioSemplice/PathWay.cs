@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class PathWay
 {
@@ -88,17 +89,23 @@ public class PathWay
     private int count = 0;
     public int Count { 
         get{
-            return Count;
+            return count;
         }
     }
 
+    private List<Vector3> nodes = new List<Vector3>();
+    public Vector3 Nodes (int index) {
+        return nodes[index];
+    }
     public PathWay(string SpawnRoadame, string SpawnRoadType, Vector3 SpawnPosition, string EndRoadame, string EndRoadType, Vector3 EndPosition) {
         count = 0;
 
         head = new Node(null, this.tail, SpawnRoadame, SpawnRoadType, SpawnPosition, count);
         tail = new Node(this.head, null, EndRoadame, EndRoadType, EndPosition, ++count);
+        nodes.Add(SpawnPosition);
+        nodes.Add(EndPosition);
     }
-
+/*
     public string SpawnName {
         get{
             return head.RoadName;
@@ -122,31 +129,40 @@ public class PathWay
     }
 
     public void AddNode(string roadame, string roadType, Vector3 position) {
-        Node tempTail = this.tail;
+        Node tempTail = new Node(tail.PreviousNode, null, roadame, roadType, position, count-2);
 
-        this.tail = new Node(this.tail.PreviousNode, tempTail, roadame, roadType, position, tail.Index);
+        this.tail = new Node(this.tail.PreviousNode, tempTail, roadame, roadType, position, count-2);
         tempTail.PreviousNode.NextNode = this.tail;
         tempTail.PreviousNode = this.tail;
 
         tempTail.Index = count;
         this.tail = tempTail;
         count++;
+        nodes.RemoveAt(count-1);
+        nodes.Add(position);
+        nodes.Add(tempTail.Position);
     }
 
-    public bool AddRange(Vector3[] positions, string[] names, string[] types, int index) {
+    public bool AddNodeRange(Vector3[] positions, string[] names, string[] types) {
+        Vector3 tempNode = this.tail.Position;
+
         if (CheckRange(positions, names, types)) {
 
             foreach (Vector3 position in positions) {
                 AddNode(names[Array.IndexOf(positions, position)], types[Array.IndexOf(positions, position)], position);
+                
             }
             
+            nodes.RemoveAt(count-1);
+            nodes.AddRange(positions);
+            nodes.Add(tempNode);
             return true;
         }
-
         return false;
-        
     }
+    
     public Node RemovePoint(int index) {
+        nodes.RemoveAt(index);
         int middle = Mathf.CeilToInt(count / 2);
 
         Node tempPrevNode = null;
@@ -183,26 +199,13 @@ public class PathWay
     }
 
     public Node RemoveLast() {
+        nodes.RemoveAt(count-1);
         return RemovePoint(Count-1);
 
     }
 
     public Vector3 getPosition(int index) {
-        Node tempNode = this.tail;
-
-        if (index >= count/2) {
-            for (int i = count-1; i > index; i--) {
-                tempNode = tempNode.PreviousNode;
-            }
-        }
-
-        if (index < count/2) {
-            for (int i = 0; i < index; i++) {
-                tempNode = tempNode.NextNode;
-            }
-        }
-
-        return tempNode.Position;
+        return nodes[index];
     }
 
     public override string ToString() {
@@ -216,4 +219,9 @@ public class PathWay
 
         return true;
     }
+
+    public Vector3[] toArray() {
+        return nodes.ToArray();
+    }
+*/
 }

@@ -9,6 +9,10 @@ TagManager:
   - destination
   - straight
   - intersectionLights
+  - intersectionEnter
+  - intersectionOut
+  - Agent
+  - ground
   layers:
   - Default
   - TransparentFX

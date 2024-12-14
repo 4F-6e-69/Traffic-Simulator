@@ -574,7 +574,7 @@ GameObject:
   - component: {fileID: -2228740143727037359}
   m_Layer: 0
   m_Name: Hatchback
-  m_TagString: Untagged
+  m_TagString: Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
