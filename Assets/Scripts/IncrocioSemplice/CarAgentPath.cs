@@ -85,6 +85,14 @@ public class CarAgentPath
 
         (allRoads, allRoadsType) = getAllRoads(pathCorners);
         for (int i = 1; i < allRoads.Count; i++) {
+            if (allRoadsType[i] == "4_way_intersection") {
+                
+                if (i >= 1 && i <= allRoads.Count-2) {
+                    PathNormalizerV2 pathNormalizerV2 = new PathNormalizerV2(nodes, allRoads[i-1], allRoads[i], allRoads[i+1], 0.0f);
+                }
+                
+            }
+            /*
             if (allRoadsType[i] == "intersectionLights") {
                 intersectionPathNormalizer = GameObject.Find(allRoads[i]).GetComponent<IntersectionPathNormalizer>();
                 
@@ -111,6 +119,7 @@ public class CarAgentPath
                 }
                 nodes.Add(lastNode);
             }
+            */
         }
         pathAiContainer.transform.position = new Vector3(0, -5f, 0);
         Vector3[] normalizedPath = new Vector3[nodes.Count];
@@ -201,7 +210,7 @@ public class CarAgentPath
                             }
                         }
 
-                        if (hit.gameObject.tag == "intersectionLights") {
+                        if (hit.gameObject.tag == "4_way_intersection") {
                             newRoad = hit.gameObject.name;
                         }
 
@@ -209,7 +218,7 @@ public class CarAgentPath
                     }
 
                     if (!contanct_1 && !contanct_2) {
-                        roadsType.Insert(i, "intersectionLights");
+                        roadsType.Insert(i, "4_way_intersection");
                         roadsName.Insert(i, newRoad);
                         newRoad = "";
                     }
@@ -218,7 +227,7 @@ public class CarAgentPath
                     contanct_2 = false;
                 }
 
-                if ((roadsType[i] == "intersection" || roadsType[i] == "intersectionLights")) {
+                if ((roadsType[i] == "4_way_intersection" /*|| roadsType[i] == "4_way_intersection"*/)) {
                     float differeceModule = (positions[i] - positions[i-1]).magnitude;
                     if (differeceModule <= 1.6f) {
                         roadsName.RemoveAt(i);
@@ -245,13 +254,13 @@ public class CarAgentPath
             GameObject.Destroy(GameObject.Find(carName + "_PathPhysics").transform.GetChild(i).gameObject);
         }
         GameObject.Destroy(GameObject.Find(carName + "_PathPhysics"));
-
+/*
         for (int i = 0; i < nodes.Count; i++) {
-            if (nodes[i].Item3 == "intersectionLights") {
+            if (nodes[i].Item3 == "4_way_intersection") {
                 GameObject.Find(nodes[i].Item2).GetComponent<IntersectionPathNormalizer>().RemovePath(carName);
             }
         }
-
+*/
         GameObject.Destroy(GameObject.Find(carName + "_Path"));
         nodes.Clear();
     }
