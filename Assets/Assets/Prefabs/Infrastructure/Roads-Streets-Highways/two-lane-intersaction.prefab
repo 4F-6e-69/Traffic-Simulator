@@ -230,7 +230,6 @@ GameObject:
   - component: {fileID: 6753345373119816489}
   - component: {fileID: 6103798526535529216}
   - component: {fileID: 7747181072528126253}
-  - component: {fileID: 6749247142520487067}
   - component: {fileID: 7487571517894876883}
   m_Layer: 0
   m_Name: two-lane-intersaction
@@ -384,18 +383,6 @@ MonoBehaviour:
   - {fileID: 6115443339091199087}
   - {fileID: 138635337649481943}
   center: {fileID: 1887538640267593326}
---- !u!114 &6749247142520487067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 871344785740461313}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d264c3153bb6c494499c67b6e135ca0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7487571517894876883
 MonoBehaviour:
   m_ObjectHideFlags: 0

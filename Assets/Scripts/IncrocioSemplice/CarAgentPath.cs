@@ -69,6 +69,14 @@ public class CarAgentPath
         return (dest, destinationPointRoadName, destinationPointRoadType);
     }
 
+    public int GetNodesCount () {
+        return nodes.Count;
+    }
+
+    public Vector3 GetNode (int index) {
+        return nodes[index].Item1;
+    }
+
     public bool AddPath (string currentCarName, NavMeshAgent navigator) {
         (GameObject pathAiContainer, GameObject pathRigidPath) = setPathContainers(currentCarName);
         
@@ -80,46 +88,23 @@ public class CarAgentPath
         List<string> allRoads = new List<string>();
         List<string> allRoadsType = new List<string>(); 
 
-        IntersectionPathNormalizer intersectionPathNormalizer;
-        int counter = 1;
-
         (allRoads, allRoadsType) = getAllRoads(pathCorners);
+        int lastPathLength = nodes.Count;
+
+        for (int i = 0; i < allRoads.Count; i++) {
+            Debug.Log(allRoads[i] + " " + allRoadsType[i]);
+        }
+
         for (int i = 1; i < allRoads.Count; i++) {
             if (allRoadsType[i] == "4_way_intersection") {
                 
                 if (i >= 1 && i <= allRoads.Count-2) {
                     PathNormalizerV2 pathNormalizerV2 = new PathNormalizerV2(nodes, allRoads[i-1], allRoads[i], allRoads[i+1], 0.0f);
+                    if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
                 }
                 
             }
-            /*
-            if (allRoadsType[i] == "intersectionLights") {
-                intersectionPathNormalizer = GameObject.Find(allRoads[i]).GetComponent<IntersectionPathNormalizer>();
-                
-                var lastNode = nodes[nodes.Count-1];
-
-                if (counter < pathCorners.Length) {
-                    float distance = Vector3.Distance(pathCorners[counter], pathCorners[counter-1]);
-                    if (distance > 6f) {
-                        tempNormalizedPath = intersectionPathNormalizer.Normalize(pathCorners[counter-1]);
-                        nodes.RemoveAt(nodes.Count-1);
-                        foreach (Vector3 node in tempNormalizedPath) {
-                            nodes.Add((node, allRoads[i], allRoadsType[i]));  
-                        }
-                        nodes.Add(lastNode);
-                        counter = counter + 2;
-                        continue;
-                    }
-                }
-
-                tempNormalizedPath = intersectionPathNormalizer.Normalize(currentCarName);
-                nodes.RemoveAt(nodes.Count-1);
-                foreach (Vector3 node in tempNormalizedPath) {
-                    nodes.Add((node, allRoads[i], allRoadsType[i]));  
-                }
-                nodes.Add(lastNode);
-            }
-            */
+            lastPathLength = nodes.Count;
         }
         pathAiContainer.transform.position = new Vector3(0, -5f, 0);
         Vector3[] normalizedPath = new Vector3[nodes.Count];
@@ -127,6 +112,7 @@ public class CarAgentPath
             normalizedPath[i] = nodes[i].Item1 + new Vector3(0, 0.5f, 0);
         }
         DrawPoints(normalizedPath, Color.blue, pathRigidPath);
+
         return true;
     }
 

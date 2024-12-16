@@ -4,10 +4,13 @@ public class CarController : MonoBehaviour
 {
 
     public bool isDestroyed = false;
+    private SpawnerManager spawnerManager;
+    [SerializeField] private GameObject navigatorObject;
 
     private CarAgentPath pathWay;
     private void OnEnable() {
         pathWay = new CarAgentPath();
+        spawnerManager = GameObject.Find("Spawner").GetComponent<SpawnerManager>();
         
         Vector3 spawn = pathWay.getSpawnPoint();
         Vector3 destination = pathWay.getDestinationPoint();
@@ -15,19 +18,15 @@ public class CarController : MonoBehaviour
 
         transform.position = spawn  + new Vector3 (0, 0.75f, 0);
         transform.LookAt(transform.forward);
+        gameObject.tag = "Agent";
     }
 
     private void Start() {
-        int childCount = transform.childCount;
-        GameObject navigatorObject = null;
+        bool isPathValid = pathWay.AddPath(gameObject.name, navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>());
 
-        for (int i = 0; i < childCount; i++) {
-            if (transform.GetChild(i).gameObject.name == "navigator") {
-                navigatorObject = transform.GetChild(i).gameObject;
-            }
+        if (!isPathValid) {
+            DestroyCar();
         }
-
-        pathWay.AddPath(gameObject.name, navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>());
     }
 
     public void DestroyCar() {
