@@ -41,6 +41,8 @@ public class CarAgentPath
         return nodes[nodes.Count-1].Item1;
     }
 
+    
+
     private (Vector3, string, string) setSpawnPoint () {
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("spawn");
         var randIndex = Random.Range(1, spawnPoints.Length + 1)-1;
