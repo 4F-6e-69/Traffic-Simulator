@@ -29,7 +29,7 @@ public class CarController : MonoBehaviour {
         pathWay = new CarAgentPath();
 
         Vector3 spawn = pathWay.getSpawnPoint();
-        transform.position = spawn  + new Vector3 (0, 0.1f, 0);
+        transform.position = spawn  + new Vector3 (0, 0.05f, 0);
         transform.LookAt(transform.forward);
 
     }
@@ -63,7 +63,6 @@ public class CarController : MonoBehaviour {
 
 
     private void Update() {
-        
         MoveVehicle();
     }
 
