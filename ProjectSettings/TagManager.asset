@@ -8,11 +8,12 @@ TagManager:
   - spawn
   - destination
   - straight
-  - intersectionLights
   - intersectionEnter
   - intersectionOut
   - Agent
   - ground
+  - 4_way_intersection
+  - intersectionLights
   layers:
   - Default
   - TransparentFX

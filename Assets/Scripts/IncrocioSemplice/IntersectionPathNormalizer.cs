@@ -113,12 +113,12 @@ public class IntersectionPathNormalizer : MonoBehaviour
 
         Vector3 intersectionEnter = path.Find(x => x.Item3 == name).Item1;
         Vector3 intersectionExit = path.Find(x => x.Item3 == name).Item2;
-        Direction direction = Direction.None;
+        DirectionType direction = DirectionType.None;
 
         (direction, intersectionEnter, intersectionExit) = getDirection(intersectionExit, intersectionEnter);
         Debug.Log(direction);
 
-        if (direction == Direction.Right) {
+        if (direction == DirectionType.Right) {
             Vector3[] path = new Vector3[] {intersectionEnter, new Vector3(0, 0, 0), intersectionExit};
 
             
@@ -138,7 +138,7 @@ public class IntersectionPathNormalizer : MonoBehaviour
             return path;
         }
     
-        if (direction == Direction.Left) {
+        if (direction == DirectionType.Left) {
             Vector3[] path = new Vector3[] {intersectionEnter, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), intersectionExit};
                         
             if (Vector3.Distance(intersectionEnter, waypoints[0].transform.position) < 0.2f) {
@@ -173,8 +173,8 @@ public class IntersectionPathNormalizer : MonoBehaviour
         return new Vector3[3];
     }
 
-    private (Direction, Vector3, Vector3) getDirection(Vector3 end, Vector3 start) {
-        Direction direction = Direction.None;
+    private (DirectionType, Vector3, Vector3) getDirection(Vector3 end, Vector3 start) {
+        DirectionType direction = DirectionType.None;
         Vector3 intersectionEnter = new Vector3(0, 0, 0);
         Vector3 intersectionExit = new Vector3(0, 0, 0);
         
@@ -183,22 +183,22 @@ public class IntersectionPathNormalizer : MonoBehaviour
             if (center.transform.position.z - start.z < 0) {
                 //angolo in alto a destra
                 if (Mathf.Abs(end.x) - Mathf.Abs(start.x) < 0) {
-                    direction = Direction.Right;
+                    direction = DirectionType.Right;
                     intersectionEnter = waypoints[6].transform.position;
                     intersectionExit = waypoints[2].transform.position;
                 }else {
-                    direction = Direction.Left;
+                    direction = DirectionType.Left;
                     intersectionEnter = waypoints[3].transform.position;
                     intersectionExit = waypoints[5].transform.position;
                 }
             }else {
                 //angolo in basso a destra
                 if (Mathf.Abs(end.x) - Mathf.Abs(start.x) < 0) {
-                    direction = Direction.Left;
+                    direction = DirectionType.Left;
                     intersectionEnter = waypoints[6].transform.position;
                     intersectionExit = waypoints[1].transform.position;
                 }else {
-                    direction = Direction.Right;
+                    direction = DirectionType.Right;
                     intersectionEnter = waypoints[0].transform.position;
                     intersectionExit = waypoints[5].transform.position;
                 }
@@ -207,22 +207,22 @@ public class IntersectionPathNormalizer : MonoBehaviour
             if (center.transform.position.z - start.z < 0) {
                 //angolo in alto a sinistra
                 if (Mathf.Abs(end.x) - Mathf.Abs(start.x) < 0) {
-                    direction = Direction.Left;
+                    direction = DirectionType.Left;
                     intersectionEnter = waypoints[4].transform.position;
                     intersectionExit = waypoints[2].transform.position;
                 }else {
-                    direction = Direction.Right;
+                    direction = DirectionType.Right;
                     intersectionEnter = waypoints[3].transform.position;
                     intersectionExit = waypoints[7].transform.position;
                 }
             }else {
                 //angolo in basso a sinistra
                 if (Mathf.Abs(end.x) - Mathf.Abs(start.x) < 0) {
-                    direction = Direction.Right;
+                    direction = DirectionType.Right;
                     intersectionEnter = waypoints[4].transform.position;
                     intersectionExit = waypoints[1].transform.position;
                 }else {
-                    direction = Direction.Left;
+                    direction = DirectionType.Left;
                     intersectionEnter = waypoints[0].transform.position;
                     intersectionExit = waypoints[7].transform.position;
                 }
@@ -233,7 +233,7 @@ public class IntersectionPathNormalizer : MonoBehaviour
     }
 }
 
-public enum Direction {
+public enum DirectionType {
     None,
     Right, 
     Left
