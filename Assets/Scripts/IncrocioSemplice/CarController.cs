@@ -11,8 +11,7 @@ public class CarController : MonoBehaviour {
 
     [HideInInspector] public bool isDestroyed = false;
 
-
-    [SerializeField] private NavMeshAgent navigator;
+    private NavMeshAgent navigator;
     private CarAgentPath pathWay;
     private Vector3[] path;  // Percorso calcolato da CarAgentPath
     private int currentWaypointIndex = 0;
@@ -21,7 +20,6 @@ public class CarController : MonoBehaviour {
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float acceleration = 0.5f;
     private float currentSpeed = 0f;
-
 
     private Vector3 smoothDirection; // Direzione smussata per le curve
 
@@ -36,9 +34,14 @@ public class CarController : MonoBehaviour {
 
     private void Start() {
 
-        bool isPathValid = pathWay.AddPath(gameObject.name, navigator);
+        int childCount = transform.childCount;
+        for (int i = 0; i < childCount; i++) {
+            if (transform.GetChild(i).gameObject.name == "navigator") {
+                navigator = transform.GetChild(i).gameObject.GetComponent<NavMeshAgent>();
+            }
+        }
 
-        if (isPathValid){
+        if (pathWay.AddPath(gameObject.name, navigator)){
             path = pathWay.GetPath(); // Ottieni il percorso completo come array di punti
             if (path.Length > 0) {
                 // Inizializza la direzione smussata con il primo waypoint
@@ -59,8 +62,6 @@ public class CarController : MonoBehaviour {
         rb.useGravity = true;
 
     }
-
-
 
     private void Update() {
         MoveVehicle();
@@ -274,11 +275,11 @@ public class CarController : MonoBehaviour {
         rb.MovePosition(rb.position + velocity * Time.deltaTime);
 
         // Ruota il veicolo verso la direzione smussata
-Quaternion targetRotation = Quaternion.LookRotation(smoothDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(smoothDirection);
 
-// Incrementa la velocità di rotazione in base alla distanza
-float rotationSpeed = distanceToWaypoint < 3f ? 10f : 5f; // Più veloce nelle curve strette
-rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
+        // Incrementa la velocità di rotazione in base alla distanza
+        float rotationSpeed = distanceToWaypoint < 3f ? 10f : 5f; // Più veloce nelle curve strette
+        rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
 
     }
 
