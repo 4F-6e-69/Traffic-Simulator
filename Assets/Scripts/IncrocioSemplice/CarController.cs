@@ -1,3 +1,4 @@
+using System.Data.Common;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,9 +8,11 @@ public enum Status {
     SLOW_DOWN
 }
 
+
 public class CarController : MonoBehaviour {
 
     [HideInInspector] public bool isDestroyed = false;
+    [HideInInspector] private bool go;
 
     private NavMeshAgent navigator;
     private CarAgentPath pathWay;
@@ -41,15 +44,14 @@ public class CarController : MonoBehaviour {
             }
         }
 
-        if (pathWay.AddPath(gameObject.name, navigator)){
+        if (pathWay.AddPath(gameObject.name, navigator)){ // if(isValidPath)
             path = pathWay.GetPath(); // Ottieni il percorso completo come array di punti
             if (path.Length > 0) {
                 // Inizializza la direzione smussata con il primo waypoint
                 smoothDirection = (path[0] - transform.position).normalized;
             }
-        }else{
-            DestroyCar();
-        }
+        } else DestroyCar();
+        go = true;
 
         rb = GetComponent<Rigidbody>();
         if (rb == null) {
@@ -237,9 +239,28 @@ public class CarController : MonoBehaviour {
             return;
         }
 
+        Debug.Log(pathWay.GetCurrentCarName(0));
+
+        // Status trafficStatus = CheckTrafficLight();
+        // switch (trafficStatus) {
+        //     case Status.STOP:
+        //         currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
+        //         Debug.Log("Semaforo ROSSO: il veicolo si ferma.");
+        //         return;
+        //     case Status.SLOW_DOWN:
+        //         currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed / 2, Time.deltaTime * 2f);
+        //         Debug.Log("Semaforo GIALLO: il veicolo rallenta.");
+        //         break;
+        //     case Status.GO:
+        //         // Procedi normalmente
+        //         break;
+        // }
+
         // Controlla se il veicolo ha completato il percorso
         if (currentWaypointIndex >= path.Length) {
-            Debug.Log("Percorso completato. Il veicolo si ferma.");
+            if(go){
+                Debug.Log("Percorso completato. Il veicolo si ferma."); go = false;
+            } 
             currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
             rb.linearVelocity = Vector3.zero;
             return;
@@ -282,6 +303,62 @@ public class CarController : MonoBehaviour {
         rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
 
     }
+
+    // private Status CheckTrafficLight() {
+
+    //     float rayLength = 1.5f; // Lunghezza ridotta del raggio
+    //     float angleOffset = 30f; // Angolo fisso verso destra
+    //     float verticalOffset = 1f; // Altezza bassa del raggio
+    //     int rayCount = 10; // Numero di raggi per densità
+    //     float raySpacing = 0.1f; // Distanza tra i raggi paralleli
+
+    //     bool trafficLightDetected = false;
+
+    //     // Origine centrale del raggio
+    //     Vector3 rayOrigin = transform.position + Vector3.up * verticalOffset;
+
+    //     // Direzione del raggio centrale inclinata di 10 gradi
+    //     Vector3 baseDirection = Quaternion.Euler(0, angleOffset, 0) * transform.forward;
+
+    //     for (int i = -rayCount / 2; i <= rayCount / 2; i++) {
+    //         // Calcola un piccolo spostamento orizzontale per ogni raggio
+    //         Vector3 rayDirection = baseDirection + transform.right * (i * raySpacing);
+
+    //         if (Physics.Raycast(rayOrigin, rayDirection.normalized, out RaycastHit hit, rayLength)) {
+    //             Debug.DrawRay(rayOrigin, rayDirection.normalized * hit.distance, Color.red);
+
+    //             if (hit.collider.CompareTag("TrafficLight")) {
+    //                 Light trafficLight = hit.collider.GetComponentInChildren<Light>();
+    //                 Debug.Log("prova");
+
+    //                 if (trafficLight != null) {
+    //                     Debug.Log(GetStatusTrafficLight(trafficLight));
+    //                     switch (GetStatusTrafficLight(trafficLight)) {
+    //                         case TLStatus.RED:
+    //                             return Status.STOP;
+    //                         case TLStatus.YELLOW:
+    //                             return Status.SLOW_DOWN;
+    //                         case TLStatus.GREEN:
+    //                             return Status.GO;
+    //                     } 
+    //                 } else Debug.Log("Il semaforo non e' stato rilevato");
+    //             } else { Debug.Log("non legge niente");
+    //             } trafficLightDetected = true;
+    //         } else Debug.DrawRay(rayOrigin, rayDirection * rayLength, Color.green);
+    //     }
+    //     return trafficLightDetected ? Status.SLOW_DOWN : Status.GO;
+    // }
+
+    // public TLStatus GetStatusTrafficLight(Light light) {
+
+    //     if(light.color == new Color(250, 0, 0))
+    //         return TLStatus.RED;
+    //     if(light.color == new Color(205, 215, 108))
+    //         return TLStatus.YELLOW;
+    //     if(light.color == new Color(0, 255, 0))
+    //         return TLStatus.GREEN;
+    //     return TLStatus.ERROR;
+    // }
 
     public void DestroyCar() {
         isDestroyed = true;

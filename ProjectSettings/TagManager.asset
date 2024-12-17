@@ -14,6 +14,7 @@ TagManager:
   - ground
   - 4_way_intersection
   - intersectionLights
+  - TrafficLight
   layers:
   - Default
   - TransparentFX

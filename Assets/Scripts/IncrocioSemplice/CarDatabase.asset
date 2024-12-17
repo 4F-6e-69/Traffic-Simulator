@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cars:
   - carName: Taxi
-    carId: 1
+    carId: 0
     carPrefab: {fileID: 8160049463398649625, guid: 66f97e68ed002b74f8e181d1c3108e14, type: 3}
   - carName: Police
     carId: 1
@@ -29,8 +29,8 @@ MonoBehaviour:
     carId: 4
     carPrefab: {fileID: 9181701585240893179, guid: 350735ef3b951a54ba6ec49c663c667e, type: 3}
   - carName: Hatchback
-    carId: 1
+    carId: 5
     carPrefab: {fileID: 7769690492283750692, guid: f40e52a0c26735a46b681671fb2baa40, type: 3}
   - carName: Truck
-    carId: 5
+    carId: 6
     carPrefab: {fileID: 9189002782948893723, guid: bf49b486ffae2c2429b4fd41e96023c3, type: 3}

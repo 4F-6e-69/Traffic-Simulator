@@ -34,6 +34,10 @@ public class CarAgentPath
         navigatorPath = new NavMeshPath();
     }
 
+    public string GetCurrentCarName(int i){
+        return nodes[i].Item2;
+    }
+
 
     public Vector3[] GetPath() {
         Vector3[] points = new Vector3[nodes.Count];

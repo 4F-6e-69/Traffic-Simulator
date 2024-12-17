@@ -10,6 +10,7 @@ public enum IntersectionState {
     None
 }
 
+
 public class TrafficLightsManager : MonoBehaviour
 {
     [SerializeField] private List<Light> trafficLights; 
@@ -23,17 +24,17 @@ public class TrafficLightsManager : MonoBehaviour
         var randInt = Random.Range(1, 100);
 
         if (randInt >= 50) {
-            setRed(trafficLights[0]);
-            setGreen(trafficLights[1]);
-            setRed(trafficLights[2]);
-            setGreen(trafficLights[3]);
+            SetRed(trafficLights[0]);
+            SetGreen(trafficLights[1]);
+            SetRed(trafficLights[2]);
+            SetGreen(trafficLights[3]);
 
             currentState = IntersectionState.Vertical;
         } else {
-            setGreen(trafficLights[0]);
-            setRed(trafficLights[1]);
-            setGreen(trafficLights[2]);
-            setRed(trafficLights[3]);
+            SetGreen(trafficLights[0]);
+            SetRed(trafficLights[1]);
+            SetGreen(trafficLights[2]);
+            SetRed(trafficLights[3]);
 
             currentState = IntersectionState.Horizontal;
         }
@@ -66,13 +67,13 @@ public class TrafficLightsManager : MonoBehaviour
         switchState = true;
 
         if (currentState == IntersectionState.Vertical) {
-            setYellow(trafficLights[1]);
-            setYellow(trafficLights[3]);
+            SetYellow(trafficLights[1]);
+            SetYellow(trafficLights[3]);
 
             currentState = IntersectionState.VerticalOrange;
         }else {
-            setYellow(trafficLights[0]);
-            setYellow(trafficLights[2]);
+            SetYellow(trafficLights[0]);
+            SetYellow(trafficLights[2]);
 
             currentState = IntersectionState.HorizontalOrange;
         }
@@ -81,10 +82,10 @@ public class TrafficLightsManager : MonoBehaviour
     private void SwitchOrange () {
         prevState = currentState;
         
-        setRed(trafficLights[1]);
-        setRed(trafficLights[3]);
-        setRed(trafficLights[0]);
-        setRed(trafficLights[2]);
+        SetRed(trafficLights[1]);
+        SetRed(trafficLights[3]);
+        SetRed(trafficLights[0]);
+        SetRed(trafficLights[2]);
 
         currentState = IntersectionState.None;
         isOrange = true;
@@ -94,33 +95,35 @@ public class TrafficLightsManager : MonoBehaviour
         switchState = false; isOrange = false;
 
         if (prevState == IntersectionState.HorizontalOrange) {
-            setGreen(trafficLights[1]);
-            setGreen(trafficLights[3]);
+            SetGreen(trafficLights[1]);
+            SetGreen(trafficLights[3]);
 
             currentState = IntersectionState.Vertical;
         }else if (prevState == IntersectionState.VerticalOrange) {
-            setGreen(trafficLights[0]);
-            setGreen(trafficLights[2]);
+            SetGreen(trafficLights[0]);
+            SetGreen(trafficLights[2]);
 
             currentState = IntersectionState.Horizontal;
         }
     }
 
-    private void setRed(Light light) {
+    private void SetRed(Light light) {
         var redPosition = new Vector3(light.transform.position.x, 1.4f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(250, 0, 0);
     }
 
-    private void setYellow (Light light) {
+    private void SetYellow (Light light) {
         var redPosition = new Vector3(light.transform.position.x, 1.25f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(205, 215, 108);
     }
 
-    private void setGreen (Light light) {
+    private void SetGreen (Light light) {
         var redPosition = new Vector3(light.transform.position.x, 1.13f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(0, 255, 0);
     }
+
+
 }
