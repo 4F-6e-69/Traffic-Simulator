@@ -746,3 +746,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyed: 0
+  navigator: {fileID: 7972779770488128105}
+  maxSpeed: 5
+  acceleration: 0.5

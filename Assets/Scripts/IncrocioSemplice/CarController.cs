@@ -10,15 +10,16 @@ public enum Status {
 public class CarController : MonoBehaviour {
 
     [HideInInspector] public bool isDestroyed = false;
+
+
+    [SerializeField] private NavMeshAgent navigator;
     private CarAgentPath pathWay;
     private Vector3[] path;  // Percorso calcolato da CarAgentPath
     private int currentWaypointIndex = 0;
 
-    NavMeshAgent navMeshAgent;
-
     private Rigidbody rb; // Aggiunto il riferimento al Rigidbody
-    private float maxSpeed = 5f;
-    private float acceleration = 0.5f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float acceleration = 0.5f;
     private float currentSpeed = 0f;
 
 
@@ -28,8 +29,6 @@ public class CarController : MonoBehaviour {
         pathWay = new CarAgentPath();
 
         Vector3 spawn = pathWay.getSpawnPoint();
-        // Vector3 destination = pathWay.getDestinationPoint();
-        // Collider[] colliders = Physics.OverlapSphere(spawn  + new Vector3 (0, 0.25f, 0), 0.1f);
         transform.position = spawn  + new Vector3 (0, 0.1f, 0);
         transform.LookAt(transform.forward);
 
@@ -37,19 +36,16 @@ public class CarController : MonoBehaviour {
 
     private void Start() {
 
-        int childCount = transform.childCount;
-        for (int i = 0; i < childCount; i++) {
-            if (transform.GetChild(i).gameObject.name == "navigator") {
-                navMeshAgent = transform.GetChild(i).gameObject.GetComponent<NavMeshAgent>();
-            }
-        }
+        bool isPathValid = pathWay.AddPath(gameObject.name, navigator);
 
-        if (pathWay.AddPath(gameObject.name, navMeshAgent)){
+        if (isPathValid){
             path = pathWay.GetPath(); // Ottieni il percorso completo come array di punti
             if (path.Length > 0) {
                 // Inizializza la direzione smussata con il primo waypoint
                 smoothDirection = (path[0] - transform.position).normalized;
             }
+        }else{
+            DestroyCar();
         }
 
         rb = GetComponent<Rigidbody>();
