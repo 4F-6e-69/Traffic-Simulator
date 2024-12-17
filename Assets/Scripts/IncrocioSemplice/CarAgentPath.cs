@@ -34,10 +34,6 @@ public class CarAgentPath
         navigatorPath = new NavMeshPath();
     }
 
-    public string GetCurrentCarName(int i){
-        return nodes[i].Item2;
-    }
-
 
     public Vector3[] GetPath() {
         Vector3[] points = new Vector3[nodes.Count];
@@ -55,8 +51,6 @@ public class CarAgentPath
     public Vector3 getDestinationPoint () {
         return nodes[nodes.Count-1].Item1;
     }
-
-    
 
     private (Vector3, string, string) setSpawnPoint () {
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("spawn");

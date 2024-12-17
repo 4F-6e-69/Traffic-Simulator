@@ -5,7 +5,8 @@ using UnityEngine.AI;
 public enum Status {
     GO,
     STOP,
-    SLOW_DOWN
+    SLOW_DOWN,
+    GO_OVER
 }
 
 
@@ -25,6 +26,7 @@ public class CarController : MonoBehaviour {
     private float currentSpeed = 0f;
 
     private Vector3 smoothDirection; // Direzione smussata per le curve
+    private Status trafficStatus = Status.GO;
 
     private void OnEnable() {
         pathWay = new CarAgentPath();
@@ -239,22 +241,21 @@ public class CarController : MonoBehaviour {
             return;
         }
 
-        Debug.Log(pathWay.GetCurrentCarName(0));
 
-        // Status trafficStatus = CheckTrafficLight();
-        // switch (trafficStatus) {
-        //     case Status.STOP:
-        //         currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
-        //         Debug.Log("Semaforo ROSSO: il veicolo si ferma.");
-        //         return;
-        //     case Status.SLOW_DOWN:
-        //         currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed / 2, Time.deltaTime * 2f);
-        //         Debug.Log("Semaforo GIALLO: il veicolo rallenta.");
-        //         break;
-        //     case Status.GO:
-        //         // Procedi normalmente
-        //         break;
-        // }
+        if(trafficStatus != Status.GO_OVER){
+            trafficStatus = CheckTrafficLight();
+            switch (trafficStatus) {
+                case Status.STOP:
+                    currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
+                    return;
+                case Status.SLOW_DOWN:
+                    currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
+                    return;
+                case Status.GO:
+                    // Procedi normalmente
+                    break;
+            }
+        }
 
         // Controlla se il veicolo ha completato il percorso
         if (currentWaypointIndex >= path.Length) {
@@ -304,61 +305,46 @@ public class CarController : MonoBehaviour {
 
     }
 
-    // private Status CheckTrafficLight() {
+    private Status CheckTrafficLight() {
 
-    //     float rayLength = 1.5f; // Lunghezza ridotta del raggio
-    //     float angleOffset = 30f; // Angolo fisso verso destra
-    //     float verticalOffset = 1f; // Altezza bassa del raggio
-    //     int rayCount = 10; // Numero di raggi per densità
-    //     float raySpacing = 0.1f; // Distanza tra i raggi paralleli
+        float rayLength = 1.5f; // Lunghezza ridotta del raggio
+        float angleOffset = 30f; // Angolo fisso verso destra
+        float verticalOffset = 1f; // Altezza bassa del raggio
+        int rayCount = 10; // Numero di raggi per densità
+        float raySpacing = 0.1f; // Distanza tra i raggi paralleli
 
-    //     bool trafficLightDetected = false;
+        bool trafficLightDetected = false;
 
-    //     // Origine centrale del raggio
-    //     Vector3 rayOrigin = transform.position + Vector3.up * verticalOffset;
+        // Origine centrale del raggio
+        Vector3 rayOrigin = transform.position + Vector3.up * verticalOffset;
 
-    //     // Direzione del raggio centrale inclinata di 10 gradi
-    //     Vector3 baseDirection = Quaternion.Euler(0, angleOffset, 0) * transform.forward;
+        // Direzione del raggio centrale inclinata di 10 gradi
+        Vector3 baseDirection = Quaternion.Euler(0, angleOffset, 0) * transform.forward;
 
-    //     for (int i = -rayCount / 2; i <= rayCount / 2; i++) {
-    //         // Calcola un piccolo spostamento orizzontale per ogni raggio
-    //         Vector3 rayDirection = baseDirection + transform.right * (i * raySpacing);
+        for (int i = -rayCount / 2; i <= rayCount / 2; i++) {
+            // Calcola un piccolo spostamento orizzontale per ogni raggio
+            Vector3 rayDirection = baseDirection + transform.right * (i * raySpacing);
 
-    //         if (Physics.Raycast(rayOrigin, rayDirection.normalized, out RaycastHit hit, rayLength)) {
-    //             Debug.DrawRay(rayOrigin, rayDirection.normalized * hit.distance, Color.red);
+            if (Physics.Raycast(rayOrigin, rayDirection.normalized, out RaycastHit hit, rayLength)) {
+                Debug.DrawRay(rayOrigin, rayDirection.normalized * hit.distance, Color.red);
 
-    //             if (hit.collider.CompareTag("TrafficLight")) {
-    //                 Light trafficLight = hit.collider.GetComponentInChildren<Light>();
-    //                 Debug.Log("prova");
+                if (hit.collider.CompareTag("TrafficLight")) {
+                    Light trafficLight = hit.collider.GetComponentInChildren<Light>();
+                    if (trafficLight != null) {
+                        if(trafficLight.color == new Color(255,0,0)) // RED
+                            return Status.STOP;
+                        if(trafficLight.color == new Color(205, 215, 108)) // YELLOW
+                            return Status.SLOW_DOWN;
+                        if(trafficLight.color == new Color(0, 255, 0)) // GREEN
+                            return Status.GO_OVER;
+                    }
+                } else {
+                } trafficLightDetected = true;
+            } else Debug.DrawRay(rayOrigin, rayDirection * rayLength, Color.green);
+        }
+        return trafficLightDetected ? Status.SLOW_DOWN : Status.GO;
+    }
 
-    //                 if (trafficLight != null) {
-    //                     Debug.Log(GetStatusTrafficLight(trafficLight));
-    //                     switch (GetStatusTrafficLight(trafficLight)) {
-    //                         case TLStatus.RED:
-    //                             return Status.STOP;
-    //                         case TLStatus.YELLOW:
-    //                             return Status.SLOW_DOWN;
-    //                         case TLStatus.GREEN:
-    //                             return Status.GO;
-    //                     } 
-    //                 } else Debug.Log("Il semaforo non e' stato rilevato");
-    //             } else { Debug.Log("non legge niente");
-    //             } trafficLightDetected = true;
-    //         } else Debug.DrawRay(rayOrigin, rayDirection * rayLength, Color.green);
-    //     }
-    //     return trafficLightDetected ? Status.SLOW_DOWN : Status.GO;
-    // }
-
-    // public TLStatus GetStatusTrafficLight(Light light) {
-
-    //     if(light.color == new Color(250, 0, 0))
-    //         return TLStatus.RED;
-    //     if(light.color == new Color(205, 215, 108))
-    //         return TLStatus.YELLOW;
-    //     if(light.color == new Color(0, 255, 0))
-    //         return TLStatus.GREEN;
-    //     return TLStatus.ERROR;
-    // }
 
     public void DestroyCar() {
         isDestroyed = true;
