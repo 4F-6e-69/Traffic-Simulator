@@ -7,6 +7,7 @@ public class CarAgentPath
 {
     private List<(Vector3, string, string)> nodes = new List<(Vector3, string, string)>();
     private Vector3[] tempNormalizedPath;
+
 /*
     public PathWay PATH {
 
@@ -32,6 +33,16 @@ public class CarAgentPath
         //Creazione del percorso con Ai
         navigatorPath = new NavMeshPath();
     }
+
+
+    public Vector3[] GetPath() {
+        Vector3[] points = new Vector3[nodes.Count];
+        for (int i = 0; i < nodes.Count; i++) {
+            points[i] = nodes[i].Item1; // Solo la posizione del punto
+        }
+        return points;
+    }
+
 
     public Vector3 getSpawnPoint () {
         return nodes[0].Item1;
