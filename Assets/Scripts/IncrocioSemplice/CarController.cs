@@ -14,7 +14,7 @@ public class CarController : MonoBehaviour
         
         Vector3 spawn = pathWay.getSpawnPoint();
         Vector3 destination = pathWay.getDestinationPoint();
-        Collider[] colliders = Physics.OverlapSphere(spawn  + new Vector3 (0, 0.25f, 0), 0.1f);
+        //Collider[] colliders = Physics.OverlapSphere(spawn  + new Vector3 (0, 0.25f, 0), 0.1f);
 
         transform.position = spawn  + new Vector3 (0, 0.75f, 0);
         transform.LookAt(transform.forward);
