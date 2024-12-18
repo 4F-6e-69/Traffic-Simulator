@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,7 +26,7 @@ public class CarController : MonoBehaviour {
 
     float rayLength = 1.7f; // Lunghezza ridotta del raggio
     float angleOffset = 50f; // Angolo fisso verso destra
-    float verticalOffset = 1f; // Altezza bassa del raggio
+    float verticalOffset = 0.8f; // Altezza bassa del raggio
     float horizontalOffset = 0.6f; // Distanza dal centro
     int rayCount = 30; // Numero di raggi per densità
     float raySpacing = 0.01f; // Distanza tra i raggi paralleli
@@ -41,7 +42,7 @@ public class CarController : MonoBehaviour {
     private int currentWaypointIndex = 0;
 
     private Rigidbody rb; // Aggiunto il riferimento al Rigidbody
-    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float maxSpeed = 4f;
     [SerializeField] private float acceleration = 0.5f;
     private float currentSpeed = 0f;
 
@@ -52,9 +53,8 @@ public class CarController : MonoBehaviour {
         pathWay = new CarAgentPath();
 
         Vector3 spawn = pathWay.GetSpawnPoint();
-        transform.position = spawn  + new Vector3 (0f, 0f, 0f);
+        transform.position = spawn  + new Vector3 (0f, 0.2f, 0f);
         transform.LookAt(transform.forward);
-
     }
 
     private void Start() {
@@ -74,7 +74,10 @@ public class CarController : MonoBehaviour {
                 // Inizializza la direzione smussata con il primo waypoint
                 smoothDirection = (path[0] - transform.position).normalized;
             }
-        } else DestroyCar();
+        } else {
+            DestroyCar();
+        } 
+    
         go = true;
         lightIDs = new HashSet<int>();
 
@@ -92,6 +95,9 @@ public class CarController : MonoBehaviour {
 
     private void Update() {
         MoveVehicle();
+        if(CarAgentPath.IsNear(transform.position, path[path.Count()-1], 0.5f)){
+            DestroyCar();
+        }
     }
     
 
@@ -110,7 +116,7 @@ public class CarController : MonoBehaviour {
                 Debug.Log($"Traffic Light Count: {lightIDs.Count}, IDs: {string.Join(", ", lightIDs)}");
             }
         }
-        Debug.Log($"Traffic Light Count: {lightIDs.Count}, IDs: {string.Join(", ", lightIDs)}");
+        // Debug.Log($"Traffic Light Count: {lightIDs.Count}, IDs: {string.Join(", ", lightIDs)}");
 
         
         if(trafficStatus != Status.GO_OVER) {

@@ -54,7 +54,7 @@ public class CarAgentPath
 
     private (Vector3, string, string) SetSpawnPoint () {
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("spawn");
-        var randIndex = Random.Range(1, spawnPoints.Length)-1;
+        var randIndex = Random.Range(1, spawnPoints.Length + 1)-1;
 
         Vector3 spawnPoint = spawnPoints[randIndex].transform.position;
         string spawnPointRoadName = spawnPoints[randIndex].transform.parent.name;
