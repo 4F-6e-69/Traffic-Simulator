@@ -229,7 +229,6 @@ GameObject:
   - component: {fileID: 1663903073025479892}
   - component: {fileID: 6753345373119816489}
   - component: {fileID: 6103798526535529216}
-  - component: {fileID: 7747181072528126253}
   - component: {fileID: 7487571517894876883}
   m_Layer: 0
   m_Name: two-lane-intersaction
@@ -251,9 +250,9 @@ Transform:
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 2805745776645699020}
   - {fileID: 2063227190124947902}
   - {fileID: 7657239982746191871}
-  - {fileID: 2805745776645699020}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3527347988576706590
@@ -353,37 +352,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 16.81574, y: 2, z: 16.81574}
   m_Center: {x: -0.0000028610227, y: 1, z: 8.407868}
---- !u!114 &7747181072528126253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 871344785740461313}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07cf79f9e6acc5a47a1f12d6ad7417cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boxSize: {x: 2.5, y: 3, z: 2.5}
-  waypoints:
-  - {fileID: 7689453160191968923}
-  - {fileID: 2344500388038402955}
-  - {fileID: 7389367114951624840}
-  - {fileID: 8972459757010217380}
-  - {fileID: 1091196158162067447}
-  - {fileID: 1414494427087864082}
-  - {fileID: 8076611460195348982}
-  - {fileID: 6232780008427068145}
-  - {fileID: 3950692204375687611}
-  - {fileID: 8843293919089623886}
-  - {fileID: 7238334009215713243}
-  - {fileID: 402710922208356169}
-  - {fileID: 3214407586974509174}
-  - {fileID: 6680872950119642802}
-  - {fileID: 6115443339091199087}
-  - {fileID: 138635337649481943}
-  center: {fileID: 1887538640267593326}
 --- !u!114 &7487571517894876883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,7 +726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7657239982746191871
 Transform:
   m_ObjectHideFlags: 0
@@ -901,7 +869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2063227190124947902
 Transform:
   m_ObjectHideFlags: 0
@@ -1057,7 +1025,7 @@ GameObject:
   m_Layer: 0
   m_Name: P_1
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1271,8 +1239,8 @@ GameObject:
   - component: {fileID: 6202607293234815971}
   - component: {fileID: 867210318716713901}
   m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
+  m_Name: obstacle
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1286,7 +1254,7 @@ Transform:
   m_GameObject: {fileID: 4590123788397095714}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.5, z: 8.25}
+  m_LocalPosition: {x: -0.04, y: -10, z: 8.25}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1323,7 +1291,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 39158acb02dabdd4aaeadcbee8b3e610, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1812,7 +1780,7 @@ GameObject:
   m_Layer: 0
   m_Name: P_2
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2028,7 +1996,7 @@ GameObject:
   m_Layer: 0
   m_Name: P_3
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2244,7 +2212,7 @@ GameObject:
   m_Layer: 0
   m_Name: P_0
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

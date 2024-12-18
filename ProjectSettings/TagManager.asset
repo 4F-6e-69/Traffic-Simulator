@@ -8,11 +8,17 @@ TagManager:
   - spawn
   - destination
   - straight
-  - intersectionEnter
-  - intersectionOut
   - Agent
   - ground
+  - obstacle
+  - intersectionEnter
+  - intersectionOut
   - 4_way_intersection
+  - 3_way_intersection
+  - roundabout
+  - straight_road
+  - round_curve
+  - angle_curve
   layers:
   - Default
   - TransparentFX

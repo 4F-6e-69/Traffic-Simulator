@@ -1,13 +1,14 @@
 using UnityEngine;
-
 public class CarController : MonoBehaviour
 {
 
     public bool isDestroyed = false;
     private SpawnerManager spawnerManager;
     [SerializeField] private GameObject navigatorObject;
+    private Vector3 destinationPoint;
 
     private CarAgentPath pathWay;
+
     private void OnEnable() {
         pathWay = new CarAgentPath();
         spawnerManager = GameObject.Find("Spawner").GetComponent<SpawnerManager>();
@@ -23,10 +24,6 @@ public class CarController : MonoBehaviour
 
     private void Start() {
         bool isPathValid = pathWay.AddPath(gameObject.name, navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>());
-
-        if (!isPathValid) {
-            DestroyCar();
-        }
     }
 
     public void DestroyCar() {
@@ -34,6 +31,7 @@ public class CarController : MonoBehaviour
         pathWay.DestroyPath(gameObject.name);
         Destroy(gameObject); 
     }
+    
 }
 
 
