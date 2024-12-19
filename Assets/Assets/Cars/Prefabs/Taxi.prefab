@@ -446,7 +446,7 @@ GameObject:
   - component: {fileID: 7119962499250995928}
   - component: {fileID: 8989705398287268400}
   - component: {fileID: -8550251014378216256}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Taxi
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -535,8 +535,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8160049463398649625}
   serializedVersion: 4
-  m_Mass: 1250
-  m_Drag: 10
+  m_Mass: 1150
+  m_Drag: 17
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -589,7 +589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDestroyed: 0
   maxSpeed: 5
-  acceleration: 0.5
+  acceleration: 0.47
 --- !u!1 &8225268088695874782
 GameObject:
   m_ObjectHideFlags: 0

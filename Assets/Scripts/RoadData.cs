@@ -4,7 +4,6 @@ public class RoadData : MonoBehaviour
 {
     [SerializeField] private GameObject[] contactPoint;
     [SerializeField] private GameObject[] wayPoints;
-    [SerializeField] private GameObject trafficLights;
 
     public Vector3[] GetContactPoint() {
         Vector3[] contactPointPosition = new Vector3[this.contactPoint.Length];

@@ -571,7 +571,7 @@ GameObject:
   - component: {fileID: 6303082714897204405}
   - component: {fileID: 6280316035339578298}
   - component: {fileID: -7870878697259089727}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Towtruck
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -663,7 +663,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8924721617483827851}
   serializedVersion: 4
-  m_Mass: 2000
+  m_Mass: 1350
   m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -716,5 +716,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyed: 0
-  maxSpeed: 5
-  acceleration: 0.5
+  maxSpeed: 4.06
+  acceleration: 0.38

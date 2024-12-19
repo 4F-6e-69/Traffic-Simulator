@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 5537265903877857174}
   - component: {fileID: 4073249158733345611}
   - component: {fileID: -6498327634505292377}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pickup
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -715,4 +715,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDestroyed: 0
   maxSpeed: 5
-  acceleration: 0.5
+  acceleration: 0.26

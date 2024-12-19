@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: -4168019243395681649}
   - component: {fileID: 5768773424185215325}
   - component: {fileID: -4986015558329974410}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Van
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -661,7 +661,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9181701585240893179}
   serializedVersion: 4
-  m_Mass: 3000
+  m_Mass: 1400
   m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -714,5 +714,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyed: 0
-  maxSpeed: 5
-  acceleration: 0.5
+  maxSpeed: 3.91
+  acceleration: 0.38

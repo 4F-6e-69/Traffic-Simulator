@@ -824,7 +824,7 @@ GameObject:
   - component: {fileID: 8264666805629098108}
   - component: {fileID: 8677904252877047206}
   - component: {fileID: -5208128883122179209}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Truck
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -915,7 +915,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9189002782948893723}
   serializedVersion: 4
-  m_Mass: 2500
+  m_Mass: 1500
   m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -968,5 +968,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyed: 0
-  maxSpeed: 5
-  acceleration: 0.5
+  maxSpeed: 2.85
+  acceleration: 0.16

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -53,8 +54,16 @@ public class CarController : MonoBehaviour {
         pathWay = new CarAgentPath();
 
         Vector3 spawn = pathWay.GetSpawnPoint();
+        Vector3 next = pathWay.GetNode(1);
         transform.position = spawn  + new Vector3 (0f, 0.2f, 0f);
         transform.LookAt(transform.forward);
+
+        // Calcola la direzione dal punto di spawn verso il prossimo nodo
+        Vector3 direction = (next - spawn).normalized;
+        // Posiziona la macchina leggermente indietro e in alto rispetto al punto di spawn
+        transform.position = spawn - direction * 0.3f + new Vector3(0f, 0.5f, 0f); // 1.0f indietro, 0.5f in alto
+        // Orienta la macchina nella direzione del movimento
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void Start() {
@@ -107,6 +116,8 @@ public class CarController : MonoBehaviour {
             return;
         }
 
+        // ------------- HandleTrafficLights ----------------------
+
         int lightID = CheckTrafficLight2();
         if (lightID != -1) {
             // Aggiunge l'ID al set e verifica se il set è cambiato
@@ -143,6 +154,9 @@ public class CarController : MonoBehaviour {
                 }
             }
         }
+
+        // HandlePrecedences();
+        // HandleSafetyDistance();
 
         // Controlla se il veicolo ha completato il percorso
         if (currentWaypointIndex >= path.Length) {
@@ -191,6 +205,71 @@ public class CarController : MonoBehaviour {
         rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
 
     }
+
+
+    private void HandlePrecedences() {
+        
+        float detectionRadius = 10f; // Raggio per rilevare i veicoli vicini
+        LayerMask vehicleLayer = LayerMask.GetMask("Vehicle"); // Layer dei veicoli
+
+        // Ottieni tutti i veicoli vicini
+        Collider[] nearbyVehicles = Physics.OverlapSphere(transform.position, detectionRadius, vehicleLayer);
+
+        foreach (var vehicle in nearbyVehicles) {
+            // Salta se è il proprio collider
+            if (vehicle.gameObject == this.gameObject) continue;
+
+            // Calcola il vettore verso il veicolo rilevato
+            Vector3 toOtherVehicle = vehicle.transform.position - transform.position;
+
+            // Calcola l'angolo rispetto alla destra del veicolo
+            float angle = Vector3.SignedAngle(transform.forward, toOtherVehicle, Vector3.up);
+
+            // Controlla se il veicolo è alla destra (angolo tra 0 e 90 gradi)
+            if (angle > 0 && angle < 90) {
+                // Verifica se l'altro veicolo è abbastanza vicino per richiedere la precedenza
+                float distanceToOtherVehicle = toOtherVehicle.magnitude;
+
+                if (distanceToOtherVehicle < detectionRadius) {
+                    // Ferma il veicolo corrente per dare la precedenza
+                    Debug.Log($"Dare precedenza al veicolo: {vehicle.name}");
+                    currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
+                    return;
+                }
+            }
+        }
+
+        // Se nessun veicolo ha precedenza, continua normalmente
+        currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.deltaTime, maxSpeed);
+    }
+
+    private void HandleSafetyDistance() {
+        float safetyDistance = 10f; // Distanza di sicurezza in unità
+        float brakingIntensity = 1000f; // Intensità del rallentamento
+
+        // Direzione di controllo: frontale
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.5f; // Leggermente sopra la base del veicolo
+        Vector3 rayDirection = transform.forward;
+
+        // Lancia un Raycast per rilevare veicoli davanti
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, safetyDistance)) {
+            if (hit.collider.CompareTag("Agent")) {
+                // Calcola la distanza dall'oggetto rilevato
+                float distanceToVehicle = hit.distance;
+
+                // Rallenta in proporzione alla distanza (più vicino = più rallentamento)
+                float slowDownFactor = Mathf.Clamp01(1f - distanceToVehicle / safetyDistance);
+                currentSpeed = Mathf.Max(currentSpeed - brakingIntensity * slowDownFactor * Time.deltaTime, 0);
+
+                Debug.Log($"Veicolo rilevato a {distanceToVehicle} metri. Rallentando.");
+                return;
+            }
+        }
+
+        // Nessun veicolo rilevato: accelera fino alla velocità massima
+        currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.deltaTime, maxSpeed);
+    }
+
 
     private Status CheckTrafficLight() {
 
