@@ -102,7 +102,7 @@ public class CarAgentPath
             currentRoad = GameObject.Find(StringPath[i]);
             nextRoad = GameObject.Find(StringPath[i+1]);
 
-            if (currentRoad.tag == "4_way_intersection" || currentRoad.tag == "3_way_intersection") {
+            if (currentRoad.tag == "4_way_intersection" /*|| currentRoad.tag == "3_way_intersection"*/) {
                 pathNormalizerV2 = new PathNormalizerV2(nodes, previousRoad.name, currentRoad.name, nextRoad.name, 0.0f);
                 //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
                 lastPathLength = nodes.Count;

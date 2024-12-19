@@ -153,7 +153,42 @@ public class PathNormalizerV2
         // --incroci a quattro vie
         // --rotonde
 
+        int contactPointIndex = -1;
+        Direction direction = Direction.NONE;
         
+        if (currentRoadType == "3_way_intersection") {
+            (contactPointIndex,direction) = GetThreeWayDirection(previous, next);
+        }else if (currentRoadType == "4_way_intersection"  || currentRoadType == "roundabout") {
+            (contactPointIndex,direction) = GetDirection(previous, next);  
+        }
+
+        int currentLength = path.Count;
+        int spin = 0; 
+
+        if (direction == Direction.STRAIGHT) {
+            additionalPathLength = 4;
+            spin = 2;
+
+        }else if (direction == Direction.LEFT) {
+            additionalPathLength = 5;
+            spin = 3;
+
+        }else if (direction == Direction.RIGHT) {
+            additionalPathLength = 3;
+            spin = 1;
+
+        }
+
+        Debug.Log(currentRoadType + "direction: " + direction);
+
+        if (currentRoadType == "3_way_intersection") {this.tempPath =  ThreeWayIntersection(contactPoint[contactPointIndex],direction, spunkRate);}
+        if (currentRoadType == "4_way_intersection") {this.tempPath =  FourWayIntersection(contactPoint[contactPointIndex], direction, spunkRate);}
+        if (currentRoadType == "roundabout") {additionalPathLength = spin * 3; this.tempPath =  Roundabout(contactPoint[contactPointIndex], direction, spunkRate);}
+
+        UpdatePath();
+    }
+
+    private (int, Direction) GetDirection(string previous, string next) {
         GameObject previousRoad = GameObject.Find(previous);
         GameObject nextRoad = GameObject.Find(next);
 
@@ -176,28 +211,30 @@ public class PathNormalizerV2
         float tollerance = 2.5f;
         float point_tolerance = 0.05f;
         Direction direction = Direction.NONE;
+        int contactPointIndex = -1;
 
-        if (currentRoadType != "3_way_intersection") {
-            if ((previousRoadContactPoint.x <= contactPoint[3].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[3].x - point_tolerance)  &&
-                (previousRoadContactPoint.z <= contactPoint[3].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[3].z - point_tolerance)) {
-                //Debug.Log("0");
-                if (angle > -45 - tollerance && angle < -45 + tollerance) {
-                    direction = Direction.LEFT;
-                }
+        if ((previousRoadContactPoint.x <= contactPoint[3].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[3].x - point_tolerance)  &&
+            (previousRoadContactPoint.z <= contactPoint[3].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[3].z - point_tolerance)) {
+            //Debug.Log("0");
+            contactPointIndex = 3;
+            if (angle > -45 - tollerance && angle < -45 + tollerance) {
+                direction = Direction.LEFT;
+            }
 
-                if (angle > -135 - tollerance && angle < -135 + tollerance) {
-                    direction = Direction.RIGHT;
-                }
+            if (angle > -135 - tollerance && angle < -135 + tollerance) {
+                direction = Direction.RIGHT;
+            }
 
-                if (angle > -90 - tollerance && angle < -90 + tollerance) {
-                    direction = Direction.STRAIGHT;
-                }
+            if (angle > -90 - tollerance && angle < -90 + tollerance) {
+                direction = Direction.STRAIGHT;
             }
         }
+        
         
         if ((previousRoadContactPoint.x <= contactPoint[1].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[1].x - point_tolerance)  &&
             (previousRoadContactPoint.z <= contactPoint[1].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[1].z - point_tolerance)) {
             //Debug.Log("1");
+            contactPointIndex = 1;
             if (angle > 135 - tollerance && angle < 135 + tollerance) {
                 direction = Direction.LEFT;
             }
@@ -214,6 +251,7 @@ public class PathNormalizerV2
         if ((previousRoadContactPoint.x <= contactPoint[2].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[2].x - point_tolerance)  &&
             (previousRoadContactPoint.z <= contactPoint[2].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[2].z - point_tolerance)) {
             //Debug.Log("2");
+            contactPointIndex = 2;
             if (angle > 45 - tollerance && angle < 45 + tollerance) {
                 direction = Direction.LEFT;
             }
@@ -232,6 +270,7 @@ public class PathNormalizerV2
         if ((previousRoadContactPoint.x <= contactPoint[0].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[0].x - point_tolerance)  &&
             (previousRoadContactPoint.z <= contactPoint[0].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[0].z - point_tolerance)) {
             //Debug.Log("3");
+            contactPointIndex = 0;
             if (angle > -135 - tollerance && angle < -135 + tollerance) {
                 direction = Direction.LEFT;
             }
@@ -247,34 +286,65 @@ public class PathNormalizerV2
             }
         }
 
-        
+        return (contactPointIndex, direction);
+    }
+    private (int, Direction) GetThreeWayDirection(string previous, string next) {
+        GameObject previousRoad = GameObject.Find(previous);
+        GameObject nextRoad = GameObject.Find(next);
 
-        int currentLength = path.Count;
-        int spin = 0; 
+        float minDistancePrevious = Mathf.Infinity;
+        int indexMinPrevious = -1; 
 
-        if (direction == Direction.STRAIGHT) {
-            additionalPathLength = 4;
-            spin = 2;
+        float minDistanceNext = Mathf.Infinity;
+        int indexMinNext = -1; 
 
-        }else if (direction == Direction.LEFT) {
-            additionalPathLength = 5;
-            spin = 3;
+        bool isFoundPrevious = false;
+        bool isFoundNext = false;
 
-        }else if (direction == Direction.RIGHT) {
-            additionalPathLength = 3;
-            spin = 1;
+        for (int i = 0; i < this.waypoints.Length; i++) {
+            if (waypoints[i].tag == "intersectionEnter") {
+                float distance = Vector3.Distance(waypoints[i].transform.position, previousRoad.transform.position);
+                if (distance < minDistancePrevious) {
+                    minDistancePrevious = distance;
+                    indexMinPrevious = i;
+                    isFoundPrevious = true;
+                }
+            }
 
+            if (waypoints[i].tag == "intersectionOut") {
+                float distance = Vector3.Distance(waypoints[i].transform.position, nextRoad.transform.position);
+                if (distance < minDistanceNext) {
+                    minDistanceNext = distance;
+                    indexMinNext = i;
+                    isFoundNext = true;
+                }
+            }
+
+            if (isFoundPrevious && isFoundNext) {break;}
         }
 
-        Debug.Log(currentRoadType + "direction: " + direction);
+        if (indexMinNext == -1) {
+            Debug.LogError("indexMinNext: " + indexMinNext);
+            return (0, Direction.NONE);
+        }
 
-        if (currentRoadType == "3_way_intersection") {this.tempPath =  ThreeWayIntersection(previousRoadContactPoint, direction, spunkRate);}
-        if (currentRoadType == "4_way_intersection") {this.tempPath =  FourWayIntersection(previousRoadContactPoint, direction, spunkRate);}
-        if (currentRoadType == "roundabout") {additionalPathLength = spin * 3; this.tempPath =  Roundabout(previousRoadContactPoint, direction, spunkRate);}
+        if (indexMinPrevious == 0) {
+            if (indexMinNext == 7) {return (1, Direction.LEFT);}
+            if (indexMinNext == 5) {return (1, Direction.RIGHT);}
+        }
 
-        UpdatePath();
+        if (indexMinPrevious == 4) {
+            if (indexMinNext == 5) {return (2, Direction.STRAIGHT);}
+            if (indexMinNext == 1) {return (2, Direction.RIGHT);}
+        }
+
+        if (indexMinPrevious == 6) {
+            if (indexMinNext == 7) {return (0, Direction.LEFT);}
+            if (indexMinNext == 5) {return (0, Direction.RIGHT);}
+        }
+
+        return (0, Direction.NONE);
     }
-
     private Vector3[] FourWayIntersection(Vector3 previousRoadContactPoint, Direction direction, float spunkRate) {
         (Vector3 enterPoint, int index) = GetEnterPoint(previousRoadContactPoint);
 
