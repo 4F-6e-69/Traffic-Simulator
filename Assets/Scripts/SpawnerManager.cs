@@ -7,7 +7,7 @@ public class SpawnerManager : MonoBehaviour
     private float spawnTimer;
 
     private void OnEnable() {
-        Spawn();
+        // Spawn();
         spawnTimer = 0;
     }
 
@@ -23,7 +23,7 @@ public class SpawnerManager : MonoBehaviour
     public void Spawn () {
 
         var randIndex = Random.Range(1, carData.cars.Count+1)-1;
-        var tempObj = carData.cars[5].carPrefab;
+        var tempObj = carData.cars[randIndex].carPrefab;
 
         tempObj = Instantiate(tempObj, new Vector3 (0, 0.75f, 0), Quaternion.identity);
         tempObj.name = "car" + tempObj.GetInstanceID();

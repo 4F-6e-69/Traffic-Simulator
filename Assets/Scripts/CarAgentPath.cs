@@ -30,10 +30,10 @@ public class CarAgentPath
 
 /*
         //Ricerca del punto di spawn
-        (Vector3 spawnPoint, string spawnPointRoadName, string spawnPointRoadType) = setSpawnPoint();    
+        (Vector3 spawnPoint, string spawnPointRoadName, string spawnPointRoadType) = SetSpawnPoint();    
 
         //Ricerca del punto di arrivo
-        (Vector3 destinationPoint, string destinationPointRoadName, string destinationPointRoadType) = setDestination(spawnPoint);
+        (Vector3 destinationPoint, string destinationPointRoadName, string destinationPointRoadType) = SetDestination(spawnPoint);
 
         //Creazione della lista del Percorso
         //path = new PathWay (spawnPointRoadName, spawnPointRoadType, spawnPoint, destinationPointRoadName, destinationPointRoadType, destinationPoint);
@@ -113,7 +113,7 @@ public class CarAgentPath
             currentRoad = GameObject.Find(StringPath[i]);
             nextRoad = GameObject.Find(StringPath[i+1]);
 
-            if (currentRoad.tag == "4_way_intersection" || currentRoad.tag == "3_way_intersection") {
+            if (currentRoad.tag == "4_way_intersection" /*|| currentRoad.tag == "3_way_intersection"*/) {
                 pathNormalizerV2 = new PathNormalizerV2(nodes, previousRoad.name, currentRoad.name, nextRoad.name, 0.0f);
                 //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
                 lastPathLength = nodes.Count;

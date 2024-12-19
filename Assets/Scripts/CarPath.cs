@@ -23,7 +23,7 @@ public class CarPath : MonoBehaviour
 
     private int pathCount = 8;
     public List<string> GetPath() {
-        int index = 4;//Random.Range(1, pathCount);
+        int index = Random.Range(1, pathCount);
         Debug.Log("index: " + index);
 
         switch (index) {
