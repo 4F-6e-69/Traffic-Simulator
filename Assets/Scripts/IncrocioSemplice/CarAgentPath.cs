@@ -6,6 +6,7 @@ using System.Linq;
 
 public class CarAgentPath
 {
+
     private List<(Vector3, string, string)> nodes;
     private List<string> StringPath;
     //private Vector3[] tempNormalizedPath;
@@ -43,6 +44,16 @@ public class CarAgentPath
         */
     }
 
+
+    public Vector3[] GetPath() {
+        Vector3[] points = new Vector3[nodes.Count];
+        for (int i = 0; i < nodes.Count; i++) {
+            points[i] = nodes[i].Item1; // Solo la posizione del punto
+        }
+        return points;
+    }
+
+
     public Vector3 getSpawnPoint () {
         return nodes[0].Item1;
     }
@@ -50,7 +61,7 @@ public class CarAgentPath
     public Vector3 getDestinationPoint () {
         return nodes[nodes.Count-1].Item1;
     }
-/*
+
     private (Vector3, string, string) setSpawnPoint () {
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("spawn");
         //Debug.Log(spawnPoints.Length);
@@ -79,7 +90,7 @@ public class CarAgentPath
 
         return (dest, destinationPointRoadName, destinationPointRoadType);
     }
-*/
+
     public int GetNodesCount () {
         return nodes.Count;
     }
