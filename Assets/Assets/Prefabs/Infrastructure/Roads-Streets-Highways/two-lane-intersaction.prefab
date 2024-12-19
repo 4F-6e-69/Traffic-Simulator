@@ -365,10 +365,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contactPoint:
-  - {fileID: 7967546174240284301}
+  - {fileID: 7400523340896653885}
   - {fileID: 3487416924588761750}
   - {fileID: 7360008453573250473}
-  - {fileID: 7400523340896653885}
+  - {fileID: 7967546174240284301}
   wayPoints:
   - {fileID: 7689453160191968923}
   - {fileID: 2344500388038402955}
@@ -726,7 +726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7657239982746191871
 Transform:
   m_ObjectHideFlags: 0
@@ -869,7 +869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2063227190124947902
 Transform:
   m_ObjectHideFlags: 0
@@ -1254,7 +1254,7 @@ Transform:
   m_GameObject: {fileID: 4590123788397095714}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: -10, z: 8.25}
+  m_LocalPosition: {x: -0.04, y: 0.5, z: 8.25}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1994,7 +1994,7 @@ GameObject:
   - component: {fileID: 193628073498218464}
   - component: {fileID: 2040170812358482442}
   m_Layer: 0
-  m_Name: P_3
+  m_Name: P_0
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -2210,7 +2210,7 @@ GameObject:
   - component: {fileID: 6807032709456206053}
   - component: {fileID: 2084277003492675328}
   m_Layer: 0
-  m_Name: P_0
+  m_Name: P_3
   m_TagString: Untagged
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

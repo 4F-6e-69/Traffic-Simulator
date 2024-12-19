@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7553059982093709463}
   m_Layer: 0
   m_Name: p_7
-  m_TagString: Untagged
+  m_TagString: intersectionEnter
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 1416852723444166923}
   m_Layer: 0
   m_Name: p_2
-  m_TagString: Untagged
+  m_TagString: intersectionEnter
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -784,7 +784,7 @@ Transform:
   m_GameObject: {fileID: 5698710239430539460}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.039999995, y: -10, z: 8.25}
+  m_LocalPosition: {x: -0.039999995, y: 0.5, z: 8.25}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -878,7 +878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &835185776897901140
 Transform:
   m_ObjectHideFlags: 0
@@ -917,7 +917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6410376025617937800
 Transform:
   m_ObjectHideFlags: 0

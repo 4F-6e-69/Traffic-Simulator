@@ -2,24 +2,32 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using System.Linq;
 
 public class CarAgentPath
 {
-    private List<(Vector3, string, string)> nodes = new List<(Vector3, string, string)>();
-    private List<string> priorityRoads = new List<string>();
-    private Vector3[] tempNormalizedPath;
-/*
-    public PathWay PATH {
+    private List<(Vector3, string, string)> nodes;
+    private List<string> StringPath;
+    //private Vector3[] tempNormalizedPath;
 
-        get{return path;}
-
-        private set{path = value;}
-
-    }
-*/
     private NavMeshPath navigatorPath;
     public CarAgentPath () {
+        nodes = new List<(Vector3, string, string)>();
 
+        CarPath carPath = GameObject.Find("SimulationManager").GetComponent<CarPath>();
+        StringPath = carPath.GetPath();
+
+        GameObject spawnRoad = GameObject.Find(StringPath[0]);
+        GameObject destinationRoad = GameObject.Find(StringPath[StringPath.Count-1]);
+
+        Vector3 spawnPoint = spawnRoad.GetComponent<RoadData>().getSpawnPoint();
+        Vector3 destinationPoint = destinationRoad.GetComponent<RoadData>().getDestinationPoint();
+
+        nodes.Add((spawnPoint, spawnRoad.name, spawnRoad.tag));
+        nodes.Add((destinationPoint, destinationRoad.name, destinationRoad.tag));
+
+
+/*
         //Ricerca del punto di spawn
         (Vector3 spawnPoint, string spawnPointRoadName, string spawnPointRoadType) = setSpawnPoint();    
 
@@ -32,6 +40,7 @@ public class CarAgentPath
         nodes.Add((destinationPoint, destinationPointRoadName, destinationPointRoadType));
         //Creazione del percorso con Ai
         navigatorPath = new NavMeshPath();
+        */
     }
 
     public Vector3 getSpawnPoint () {
@@ -41,7 +50,7 @@ public class CarAgentPath
     public Vector3 getDestinationPoint () {
         return nodes[nodes.Count-1].Item1;
     }
-
+/*
     private (Vector3, string, string) setSpawnPoint () {
         GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag("spawn");
         //Debug.Log(spawnPoints.Length);
@@ -70,7 +79,7 @@ public class CarAgentPath
 
         return (dest, destinationPointRoadName, destinationPointRoadType);
     }
-
+*/
     public int GetNodesCount () {
         return nodes.Count;
     }
@@ -81,23 +90,53 @@ public class CarAgentPath
 
     public bool AddPath (string currentCarName, NavMeshAgent navigator) {
         (GameObject pathAiContainer, GameObject pathRigidPath) = setPathContainers(currentCarName);
+
+        GameObject previousRoad;
+        GameObject currentRoad;
+        GameObject nextRoad;
+        int lastPathLength = nodes.Count;
+        PathNormalizerV2 pathNormalizerV2;
+
+        for (int i = 1; i < StringPath.Count-1; i++) {
+            previousRoad = GameObject.Find(StringPath[i-1]);
+            currentRoad = GameObject.Find(StringPath[i]);
+            nextRoad = GameObject.Find(StringPath[i+1]);
+
+            if (currentRoad.tag == "4_way_intersection" || currentRoad.tag == "3_way_intersection") {
+                pathNormalizerV2 = new PathNormalizerV2(nodes, previousRoad.name, currentRoad.name, nextRoad.name, 0.0f);
+                //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
+                lastPathLength = nodes.Count;
+            }
+
+            if (currentRoad.tag == "round_curve" || currentRoad.tag == "angle_curve") {
+                pathNormalizerV2 = new PathNormalizerV2(nodes, previousRoad.name, currentRoad.name, 0.0f);
+                //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
+                lastPathLength = nodes.Count;
+            }
+
+        }
+        Vector3[] arrayDiVector3 = nodes.Select(node => node.Item1).ToArray();
+        DrawPoints(arrayDiVector3, Color.blue, pathRigidPath);
+
+        return true;
+    }
+        /*
         
         navigator.CalculatePath(getDestinationPoint(), navigatorPath);
         Vector3[] pathCorners = navigatorPath.corners;
 
-        //DrawPoints(pathCorners, Color.red, pathAiContainer);
+        DrawPoints(pathCorners, Color.red, pathAiContainer);
 
         List<string> allRoads = new List<string>();
         List<string> allRoadsType = new List<string>(); 
 
         (allRoads, allRoadsType) = getAllRoads(pathCorners);
-        for (int i = 0; i < priorityRoads.Count; i++) {
-           Debug.Log(priorityRoads[i]);
+        for (int i = 0; i < allRoads.Count; i++) {
+            Debug.Log(allRoads[i]);
         }
         
-/*        int lastPathLength = nodes.Count;
+        int lastPathLength = nodes.Count;
 
-/*
         for (int i = 1; i < allRoads.Count; i++) {
             if (allRoadsType[i] == "4_way_intersection" || allRoadsType[i] == "3_way_intersection") {
                 
@@ -111,7 +150,7 @@ public class CarAgentPath
             if (allRoadsType[i] == "round_curve" || allRoadsType[i] == "angle_curve") {
                 //Debug.Log(allRoads[i-1]);
                 PathNormalizerV2 pathNormalizerV2 = new PathNormalizerV2(nodes, allRoads[i-1], allRoads[i], 0.0f);
-                //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
+                if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
             }
             lastPathLength = nodes.Count;
         }
@@ -121,14 +160,12 @@ public class CarAgentPath
             normalizedPath[i] = nodes[i].Item1 + new Vector3(0, 0.5f, 0);
         }
         DrawPoints(normalizedPath, Color.blue, pathRigidPath);*/
-        return true;
-    }
 
     private void DrawPoints (Vector3[] points, Color color, GameObject pathConatiner) {
         foreach (Vector3 point in points) {
             GameObject wayPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             
-            wayPoint.transform.position = point;
+            wayPoint.transform.position = point + new Vector3(0, 0.5f, 0);
             wayPoint.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             wayPoint.GetComponent<SphereCollider>().isTrigger = true;
             wayPoint.GetComponent<Renderer>().material.color = color;
@@ -164,7 +201,7 @@ public class CarAgentPath
 
         return (thisContainerAI, thisContainerPhysics);
     }
-
+/*
     private (List<string>, List<string>) getAllRoads (Vector3[] positions) {
         List<string> roadsName = new List<string>();
         List<string> roadsType = new List<string>();
@@ -178,15 +215,6 @@ public class CarAgentPath
             }
         }
 
-        GameObject initalRoad = GameObject.Find(roadsName[0]);
-        GameObject secondRoad = GameObject.Find(roadsName[1]);
-        GameObject lastRoad = GameObject.Find(roadsName[roadsName.Count-1]);
-
-
-
-
-
-/*
         for (int i = 0; i < positions.Length; i++) {
             //Debug.Log(i);
             if (i > 1 && Vector3.Distance(positions[i], positions[i-1]) > 4) {
@@ -219,17 +247,13 @@ public class CarAgentPath
             
 
         }
-        for (int i = 0; i < roadsName.Count; i++) {
-            Debug.Log(roadsName[i]);
-        }
 
         int index = 1;
         int round_count = 0;
         int count = roadsName.Count;
 
         while (index < count) {
-            if ((roadsType[index] == "4_way_intersection") || (roadsType[index] == "3_way_intersection") || (roadsType[index] == "angle_curve")) {
-                priorityRoads.Add(roadsName[index]);
+            if ((roadsType[index] == "4_way_intersection" && roadsType[index-1] == "4_way_intersection") || (roadsType[index] == "3_way_intersection" && roadsType[index-1] == "3_way_intersection") || (roadsType[index] == "angle_curve" && roadsType[index-1 ] == "angle_curve")) {
 
                 roadsName.RemoveAt(index);
                 roadsType.RemoveAt(index);
@@ -245,7 +269,6 @@ public class CarAgentPath
                     index--;
                     count = roadsName.Count;
                 }else {
-                    priorityRoads.Add(roadsName[index]);
                     round_count = 0;
                 }
 
@@ -253,9 +276,8 @@ public class CarAgentPath
 
             index++;
         }
-        */
 
-/*
+
         for (int i = 1; i < roadsType.Count; i++) {
 
             if (roadsType[i] == lastRoadType) {
@@ -330,11 +352,10 @@ public class CarAgentPath
             lastRoadName = roadsName[i];
             lastRoadType = roadsType[i];
         }
-*/
 
         return (roadsName, roadsType);
     }
-
+*/
     public void DestroyPath(string carName) {
         for (int i = 0; i < GameObject.Find(carName + "_PathAI").transform.childCount; i++) {
             GameObject.Destroy(GameObject.Find(carName + "_PathAI").transform.GetChild(i).gameObject);

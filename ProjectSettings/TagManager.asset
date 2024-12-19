@@ -19,6 +19,7 @@ TagManager:
   - straight_road
   - round_curve
   - angle_curve
+  - Percorso
   layers:
   - Default
   - TransparentFX
