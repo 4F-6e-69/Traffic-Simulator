@@ -18,10 +18,15 @@ public class PathNormalizerV2
 
     int additionalPathLength;
 
-    public PathNormalizerV2 (List<(Vector3, string, string)> path, string previous, float spunkRate) {
+    public PathNormalizerV2 (List<(Vector3, string, string)> path, string previous, string current, float spunkRate) {
         this.path = path;
         additionalPathLength = -1;
-        //Debug.Log(previous);
+
+        GameObject roadData = GameObject.Find(current);
+        waypoints = roadData.GetComponent<RoadData>().GetWaypoints();
+        contactPoint = roadData.GetComponent<RoadData>().GetContactPoint();
+        currentRoadName = current;
+        currentRoadType = roadData.tag;
         NormalizeSingleRoad(previous, spunkRate);
     }
 
@@ -46,14 +51,18 @@ public class PathNormalizerV2
         // --curve ad angolo retto 
 
 
-        if (currentRoadType == "RoundCourve") {
+        if (currentRoadType == "round_curve") {
+            ///Debug.Log("round_curve");
             this.tempPath = RoundeCurve(previous, spunkRate);
             additionalPathLength = 4;
         }
-        if (currentRoadType == "StraightRoad") {}
-        if (currentRoadType == "AngleCurve") {
+        if (currentRoadType == "straight_road") {
+            //Debug.Log("straight_road");
+        }
+        if (currentRoadType == "angle_curve") {
+            //Debug.Log("angle_curve");
             this.tempPath = AngleCurve(previous, spunkRate);
-            additionalPathLength = 3;
+            additionalPathLength = 4;
         }
 
         UpdatePath();
@@ -67,7 +76,7 @@ public class PathNormalizerV2
         
         foreach (GameObject waypoint in waypoints) {
             if (waypoint.tag == "intersectionEnter") {
-                if (Vector3.Distance(previousRoad.transform.position, waypoint.transform.position) < minDistance) {
+                if (Vector3.Distance(previousRoad.transform.position, waypoint.transform.position) < Mathf.Abs(minDistance)) {
                     minDistance = Vector3.Distance(previousRoad.transform.position, waypoint.transform.position);
                     index = i;
                 }
@@ -77,17 +86,22 @@ public class PathNormalizerV2
 
         Vector3 [] newPath = new Vector3[4];
 
-        if (index == 0) {
-            newPath[0] = waypoints[0].transform.position;
-            newPath[1] = waypoints[1].transform.position;
-            newPath[2] = waypoints[2].transform.position;
-            newPath[3] = waypoints[3].transform.position;
+        if (index == 3 || index == 4) {
+            newPath[0] = waypoints[3].transform.position;
+            newPath[1] = waypoints[2].transform.position;
+            newPath[2] = waypoints[1].transform.position;
+            newPath[3] = waypoints[0].transform.position;
+            Debug.Log("3-2-1-0");
+
+        }else if (index == 5 || index == 0) {
+            newPath[0] = waypoints[5].transform.position;
+            newPath[1] = waypoints[6].transform.position;
+            newPath[2] = waypoints[7].transform.position;
+            newPath[3] = waypoints[4].transform.position;
+            Debug.Log("5-6-7-4");
 
         }else {
-            newPath[0] = waypoints[4].transform.position;
-            newPath[1] = waypoints[5].transform.position;
-            newPath[2] = waypoints[6].transform.position;
-            newPath[3] = waypoints[7].transform.position;
+            return new Vector3[0];
         }
 
         return newPath;
@@ -110,17 +124,24 @@ public class PathNormalizerV2
             i++;
         }
 
-        Vector3 [] newPath = new Vector3[3];
+        Vector3 [] newPath = new Vector3[4];
 
-        if (index == 0) {
-            newPath[0] = waypoints[0].transform.position;
-            newPath[1] = waypoints[1].transform.position;
-            newPath[2] = waypoints[2].transform.position;
+        if (index == 7 || index == 5) {
+            newPath[0] = waypoints[7].transform.position;
+            newPath[1] = waypoints[4].transform.position;
+            newPath[2] = waypoints[1].transform.position;
+            newPath[3] = waypoints[0].transform.position;
+            Debug.Log("7-4-1-0");
+
+        }else if (index == 2 || index == 0) {
+            newPath[0] = waypoints[2].transform.position;
+            newPath[1] = waypoints[3].transform.position;
+            newPath[2] = waypoints[6].transform.position;
+            newPath[3] = waypoints[5].transform.position;
+            Debug.Log("2-3-6-5");
 
         }else {
-            newPath[0] = waypoints[3].transform.position;
-            newPath[1] = waypoints[4].transform.position;
-            newPath[2] = waypoints[5].transform.position;
+            return new Vector3[0];
         }
 
         return newPath;
@@ -156,19 +177,21 @@ public class PathNormalizerV2
         float point_tolerance = 0.05f;
         Direction direction = Direction.NONE;
 
-        if ((previousRoadContactPoint.x <= contactPoint[0].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[0].x - point_tolerance)  &&
-            (previousRoadContactPoint.z <= contactPoint[0].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[0].z - point_tolerance)) {
-            //Debug.Log("0");
-            if (angle > -45 - tollerance && angle < -45 + tollerance) {
-                direction = Direction.LEFT;
-            }
+        if (currentRoadType != "3_way_intersection") {
+            if ((previousRoadContactPoint.x <= contactPoint[3].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[3].x - point_tolerance)  &&
+                (previousRoadContactPoint.z <= contactPoint[3].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[3].z - point_tolerance)) {
+                //Debug.Log("0");
+                if (angle > -45 - tollerance && angle < -45 + tollerance) {
+                    direction = Direction.LEFT;
+                }
 
-            if (angle > -135 - tollerance && angle < -135 + tollerance) {
-                direction = Direction.RIGHT;
-            }
+                if (angle > -135 - tollerance && angle < -135 + tollerance) {
+                    direction = Direction.RIGHT;
+                }
 
-            if (angle > -90 - tollerance && angle < -90 + tollerance) {
-                direction = Direction.STRAIGHT;
+                if (angle > -90 - tollerance && angle < -90 + tollerance) {
+                    direction = Direction.STRAIGHT;
+                }
             }
         }
         
@@ -206,8 +229,8 @@ public class PathNormalizerV2
             }
         }
 
-        if ((previousRoadContactPoint.x <= contactPoint[3].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[3].x - point_tolerance)  &&
-            (previousRoadContactPoint.z <= contactPoint[3].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[3].z - point_tolerance)) {
+        if ((previousRoadContactPoint.x <= contactPoint[0].x + point_tolerance && previousRoadContactPoint.x >= contactPoint[0].x - point_tolerance)  &&
+            (previousRoadContactPoint.z <= contactPoint[0].z + point_tolerance && previousRoadContactPoint.z >= contactPoint[0].z - point_tolerance)) {
             //Debug.Log("3");
             if (angle > -135 - tollerance && angle < -135 + tollerance) {
                 direction = Direction.LEFT;
@@ -224,16 +247,22 @@ public class PathNormalizerV2
             }
         }
 
+        
+
         int currentLength = path.Count;
+        int spin = 0; 
 
         if (direction == Direction.STRAIGHT) {
             additionalPathLength = 4;
+            spin = 2;
 
         }else if (direction == Direction.LEFT) {
             additionalPathLength = 5;
+            spin = 3;
 
         }else if (direction == Direction.RIGHT) {
             additionalPathLength = 3;
+            spin = 1;
 
         }
 
@@ -241,39 +270,40 @@ public class PathNormalizerV2
 
         if (currentRoadType == "3_way_intersection") {this.tempPath =  ThreeWayIntersection(previousRoadContactPoint, direction, spunkRate);}
         if (currentRoadType == "4_way_intersection") {this.tempPath =  FourWayIntersection(previousRoadContactPoint, direction, spunkRate);}
-        if (currentRoadType == "roundabout") {this.tempPath =  Roundabout(previousRoadContactPoint, direction, spunkRate);}
+        if (currentRoadType == "roundabout") {additionalPathLength = spin * 3; this.tempPath =  Roundabout(previousRoadContactPoint, direction, spunkRate);}
 
         UpdatePath();
     }
 
     private Vector3[] FourWayIntersection(Vector3 previousRoadContactPoint, Direction direction, float spunkRate) {
-        Vector3 enterPoint = GetEnterPoint(previousRoadContactPoint);
+        (Vector3 enterPoint, int index) = GetEnterPoint(previousRoadContactPoint);
 
-        if (direction == Direction.STRAIGHT) {return GetStraightPath(enterPoint);}
+        if (direction == Direction.STRAIGHT) {return GetStraightPath(enterPoint, index);}
 
-        if (direction == Direction.LEFT) {return GetLeftPath(enterPoint, spunkRate);}
+        if (direction == Direction.LEFT) {return GetLeftPath(enterPoint, index, spunkRate);}
 
-        return GetRightPath(enterPoint, spunkRate);
+        return GetRightPath(enterPoint, index, spunkRate);
     }
 
     private Vector3[] ThreeWayIntersection(Vector3 previousRoadContactPoint, Direction direction, float spunkRate) {
-        Vector3 enterPoint = GetEnterPoint(previousRoadContactPoint);
+        (Vector3 enterPoint, int index) = GetEnterPoint(previousRoadContactPoint);
+        Debug.Log("index: " + index);
 
-        if (direction == Direction.STRAIGHT) {return GetStraightPath(enterPoint);}
+        if (direction == Direction.STRAIGHT) {return GetStraightPath_ThreeWay(enterPoint, index);}
 
-        if (direction == Direction.LEFT) {return GetLeftPath(enterPoint, spunkRate);}
+        if (direction == Direction.LEFT) {return GetLeftPath_ThreeWay(enterPoint, index, spunkRate);}
 
-        return GetRightPath(enterPoint, spunkRate);
+        return GetRightPath_ThreeWay(enterPoint, index, spunkRate);
     }
 
     private Vector3[] Roundabout(Vector3 previousRoadContactPoint, Direction direction, float spunkRate) {
-        Vector3 enterPoint = GetEnterPoint(previousRoadContactPoint);
+        (Vector3 enterPoint, int index) = GetEnterPoint(previousRoadContactPoint);
 
-        if (direction == Direction.STRAIGHT) {return GetSpinPath(enterPoint, spunkRate, 0.25f);}
+        if (direction == Direction.STRAIGHT) {return GetSpinPath(enterPoint, index, spunkRate, 0.25f);}
 
-        if (direction == Direction.LEFT) {return GetSpinPath(enterPoint, spunkRate, 0.5f);}
+        if (direction == Direction.LEFT) {return GetSpinPath(enterPoint, index, spunkRate, 0.5f);}
 
-        return GetSpinPath(enterPoint, spunkRate, 0.75f);
+        return GetSpinPath(enterPoint, index, spunkRate, 0.75f);
     }
 
     private void UpdatePath() {
@@ -287,7 +317,7 @@ public class PathNormalizerV2
         path.Add(lastTuple);
     }
 
-    private Vector3 GetEnterPoint(Vector3 enterPoint) {
+    private (Vector3, int) GetEnterPoint(Vector3 enterPoint) {
         float minDistance = Mathf.Infinity;
         int index = 0;
         int i = 0;
@@ -302,9 +332,9 @@ public class PathNormalizerV2
             i++;
         }
 
-        return waypoints[index].transform.position;
+        return (waypoints[index].transform.position, index);
     }
-    private Vector3[] GetStraightPath(Vector3 enterPoint) {
+        private Vector3[] GetStraightPath(Vector3 enterPoint, int index) {
         
                         
         if (Vector3.Distance(enterPoint, waypoints[0].transform.position) < 0.2f) {
@@ -345,10 +375,35 @@ public class PathNormalizerV2
             return path;
         }  
     }
-    private Vector3[] GetLeftPath(Vector3 enterPoint, float spunkRate) {
+    private Vector3[] GetStraightPath_ThreeWay(Vector3 enterPoint, int index) {
         
                         
-        if (Vector3.Distance(enterPoint, waypoints[0].transform.position) < 0.2f) {
+        if (index == 4) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[11].transform.position;
+            path[2] = waypoints[2].transform.position;
+            path[3] = waypoints[5].transform.position;
+            Debug.Log("4-11-2-5");
+            return path;
+
+        }else if (index == 6) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[8].transform.position;
+            path[2] = waypoints[9].transform.position;
+            path[3] = waypoints[7].transform.position;
+            Debug.Log("6-8-9-7");
+            return path;
+
+        }else {
+            Vector3[] path = new Vector3[0];
+            Debug.Log("path null");
+            return path;
+        }  
+    }
+    private Vector3[] GetLeftPath(Vector3 enterPoint, int index, float spunkRate) {
+        
+                        
+        if (index == 0) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[14].transform.position;
             path[2] = waypoints[12].transform.position;
@@ -357,7 +412,7 @@ public class PathNormalizerV2
             Debug.Log("0-14-12-9-7");
             return path;
 
-        }else if (Vector3.Distance(enterPoint, waypoints[3].transform.position) < 0.2f) {
+        }else if (index == 3) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[9].transform.position;
             path[2] = waypoints[15].transform.position;
@@ -367,7 +422,7 @@ public class PathNormalizerV2
             return path;
 
 
-        }else if (Vector3.Distance(enterPoint, waypoints[6].transform.position) < 0.2f) {
+        }else if (index == 6) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[8].transform.position;
             path[2] = waypoints[13].transform.position;
@@ -377,7 +432,7 @@ public class PathNormalizerV2
             return path;
 
 
-        }else if (Vector3.Distance(enterPoint, waypoints[4].transform.position) < 0.2f) {
+        }else if (index == 4) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[11].transform.position;
             path[2] = waypoints[10].transform.position;
@@ -391,30 +446,80 @@ public class PathNormalizerV2
             return path;
         }
     }
-    private Vector3[] GetRightPath(Vector3 enterPoint, float spunkRate) {
+    private Vector3[] GetLeftPath_ThreeWay(Vector3 enterPoint, int index, float spunkRate) {
+        
+                        
+        if (index == 0) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[2].transform.position;
+            path[2] = waypoints[10].transform.position;
+            path[3] = waypoints[9].transform.position;
+            path[4] = waypoints[7].transform.position;
+            Debug.Log("0-2-10-9-7");
+            return path;
+
+        }else if (index == 6) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[8].transform.position;
+            path[2] = waypoints[3].transform.position;
+            path[3] = waypoints[11].transform.position;
+            path[4] = waypoints[1].transform.position;
+            Debug.Log("6-8-3-11-1");
+            return path;
+
+
+        }else {
+            Vector3[] path = new Vector3[0];
+            Debug.Log("path null");
+            return path;
+        }
+    }
+    private Vector3[] GetRightPath(Vector3 enterPoint, int index, float spunkRate) {
             
-        if (Vector3.Distance(enterPoint, waypoints[0].transform.position) < 0.2f) {
+        if (index == 0) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[14].transform.position;
             path[2] = waypoints[5].transform.position;
             Debug.Log("0-14-5");
             return path;
 
-        }else if (Vector3.Distance(enterPoint, waypoints[3].transform.position) < 0.2f) {
+        }else if (index == 3) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[9].transform.position;
             path[2] = waypoints[7].transform.position;
             Debug.Log("3-9-7");
             return path;
 
-        }else if (Vector3.Distance(enterPoint, waypoints[6].transform.position) < 0.2f) {
+        }else if (index == 6) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[8].transform.position;
             path[2] = waypoints[2].transform.position;
             Debug.Log("6-8-2");
             return path;
 
-        }else if (Vector3.Distance(enterPoint, waypoints[4].transform.position) < 0.2f) {
+        }else if (index == 4) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[11].transform.position;
+            path[2] = waypoints[1].transform.position;
+            Debug.Log("11-1-0");
+            return path;
+
+        }else {
+            Vector3[] path = new Vector3[0];
+            Debug.Log("path null");
+            return path;
+        }   
+    }
+    private Vector3[] GetRightPath_ThreeWay(Vector3 enterPoint, int index, float spunkRate) {
+            
+        if (index == 0) {
+            Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
+            path[1] = waypoints[2].transform.position;
+            path[2] = waypoints[5].transform.position;
+            Debug.Log("0-14-5");
+            return path;
+
+        }else if (index == 4) {
             Vector3[] path = new Vector3[] {enterPoint, new Vector3(0, 0, 0), new Vector3(0, 0, 0)};
             path[1] = waypoints[11].transform.position;
             path[2] = waypoints[1].transform.position;
@@ -428,6 +533,7 @@ public class PathNormalizerV2
         }   
     }
     
+
     private void ClearPath() {
         for (int i = 0; i < tempPath.Length; i++) {
             tempPath[i] = new Vector3(0, 0, 0);
@@ -470,6 +576,6 @@ public class PathNormalizerV2
         return false;
     }
     // TODO: implementare la rotonda
-    private Vector3[] GetSpinPath(Vector3 enterPoint, float spunkRate, float angle) {return new Vector3[0];}
+    private Vector3[] GetSpinPath(Vector3 enterPoint, int index, float spunkRate, float angle) {return new Vector3[0];}
 
 }

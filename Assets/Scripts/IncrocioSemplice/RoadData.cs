@@ -1,9 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class RoadData : MonoBehaviour
 {
     [SerializeField] private GameObject[] contactPoint;
     [SerializeField] private GameObject[] wayPoints;
+
+    [SerializeField] private GameObject trafficLights;
+
+    //private List<GameObject> intersectionEnterList = new List<GameObject>();
 
     public Vector3[] GetContactPoint() {
         Vector3[] contactPointPosition = new Vector3[this.contactPoint.Length];
@@ -38,4 +43,49 @@ public class RoadData : MonoBehaviour
             Debug.Log("--------------------------------");
         }
     }
+
+    public Vector3 getSpawnPoint() {
+        return wayPoints[0].transform.position;
+    }
+
+    public Vector3 getDestinationPoint() {
+        return wayPoints[1].transform.position;
+    }
+
+    private bool HasTrafficLights() {
+
+        if (trafficLights == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+/*
+    public bool CanIPass(Vector3 intersectionEnter) {
+        if (HasTrafficLights()) {
+            TrafficLightsManager trafficLightsManager = trafficLights.GetComponent<TrafficLightsManager>();
+            IntersectionState state = trafficLightsManager.GetTrafficLightState();
+
+            if  (state == IntersectionState.None) {
+                return false;
+            }
+
+            if (state == trafficLightsManager.GetCurrenteAxis(intersectionEnter)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+    public bool CanIPass(Vector3 start, Vector3 end) {
+        return false;
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        Debug.Log("Enter");
+    }
+*/
 }

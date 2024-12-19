@@ -11,6 +11,7 @@ public class CarController : MonoBehaviour {
 
     [HideInInspector] public bool isDestroyed = false;
     private CarAgentPath pathWay;
+
     private Vector3[] path;  // Percorso calcolato da CarAgentPath
     private int currentWaypointIndex = 0;
 
@@ -279,11 +280,12 @@ public class CarController : MonoBehaviour {
         rb.MovePosition(rb.position + velocity * Time.deltaTime);
 
         // Ruota il veicolo verso la direzione smussata
-Quaternion targetRotation = Quaternion.LookRotation(smoothDirection);
+        Quaternion targetRotation = Quaternion.LookRotation(smoothDirection);
 
-// Incrementa la velocità di rotazione in base alla distanza
-float rotationSpeed = distanceToWaypoint < 3f ? 10f : 5f; // Più veloce nelle curve strette
-rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
+        // Incrementa la velocità di rotazione in base alla distanza
+        float rotationSpeed = distanceToWaypoint < 3f ? 10f : 5f; // Più veloce nelle curve strette
+        rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed));
+
 
     }
 
@@ -292,6 +294,7 @@ rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaT
         pathWay.DestroyPath(gameObject.name);
         Destroy(gameObject); 
     }
+    
 }
 
 

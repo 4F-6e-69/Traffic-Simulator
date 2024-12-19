@@ -123,4 +123,30 @@ public class TrafficLightsManager : MonoBehaviour
         light.transform.position = redPosition;
         light.color = new Color(0, 255, 0);
     }
+
+    public IntersectionState GetTrafficLightState() {
+        return currentState;
+    }
+
+    public IntersectionState GetCurrenteAxis(Vector3 intersectionEnter) {
+        Vector3 nearestLight = new Vector3(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity);
+        float distance = Mathf.Infinity;
+
+        for (int i = 0; i < trafficLights.Count; i++) {
+            if (Vector3.Distance(trafficLights[i].transform.position, intersectionEnter) < distance) {
+                nearestLight = trafficLights[i].transform.position;
+                distance = Vector3.Distance(trafficLights[i].transform.position, intersectionEnter);
+            }
+
+        }
+
+        if (Vector3.Distance(nearestLight, trafficLights[0].transform.position) < 0.23f  || Vector3.Distance(nearestLight, trafficLights[2].transform.position) < 0.23f)  {
+            return IntersectionState.Horizontal;
+        } else if (Vector3.Distance(nearestLight, trafficLights[1].transform.position) < 0.23f || Vector3.Distance(nearestLight, trafficLights[3].transform.position) < 0.23f) {
+            return IntersectionState.Vertical;
+        }
+
+        return IntersectionState.None;
+    }
+
 }

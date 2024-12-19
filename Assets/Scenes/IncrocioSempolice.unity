@@ -175,6 +175,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 867210318716713901, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
+      propertyPath: m_GenerateLinks
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 867210318716713901, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
+      propertyPath: m_ApplyToChildren
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 867210318716713901, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
+      propertyPath: m_IgnoreFromBuild
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 867210318716713901, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
+      propertyPath: m_OverrideGenerateLinks
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 871344785740461313, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
       propertyPath: m_Name
       value: two-lane-intersaction
@@ -247,6 +263,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6202607293234815971, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 39158acb02dabdd4aaeadcbee8b3e610, type: 2}
     - target: {fileID: 6232780008427068145, guid: 83fa5e61c8e1b4094b15fc26ed0782ae, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -452,6 +472,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8382219529923626687, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
+      propertyPath: 'wayPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8382219529923626687, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
+      propertyPath: 'wayPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8583682659355650670, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -475,7 +503,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 197879340}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Nature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179479168232464708, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.51
+      value: 2.523
       objectReference: {fileID: 0}
     - target: {fileID: 4179479168232464708, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -771,6 +799,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: tree-type-C
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 38a4c5ebc9a2f4ea3841e7ebbc45b8b6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -864,9 +896,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 108271853}
-        m_TargetAssemblyTypeName: SpawnerManager, Assembly-CSharp
-        m_MethodName: Respawn
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PeopleManager, Assembly-CSharp
+        m_MethodName: setAnimationWalking
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -926,9 +958,10 @@ GameObject:
   - component: {fileID: 481033964}
   - component: {fileID: 481033963}
   - component: {fileID: 481033962}
-  m_Layer: 0
+  - component: {fileID: 481033966}
+  m_Layer: 7
   m_Name: Grass
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1022,6 +1055,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1075235014}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &481033966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481033961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06ab269997058e48b1bfff49a3cd802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joggingPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  policeTarget:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1001 &510508028
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1089,6 +1143,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ad9ae33334e9a49bcb1b9e0f71d183c7, type: 3}
       propertyPath: m_Name
       value: tree-type-A
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ad9ae33334e9a49bcb1b9e0f71d183c7, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1274,7 +1332,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 108271853}
         m_TargetAssemblyTypeName: SpawnerManager, Assembly-CSharp
-        m_MethodName: Spawn
+        m_MethodName: Respawn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1373,6 +1431,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 94ed5dd0a20184a0ca74da04e1e4ab35, type: 3}
       propertyPath: m_Name
       value: bush-type-A
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 94ed5dd0a20184a0ca74da04e1e4ab35, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1642,7 +1704,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1075235014}
   - component: {fileID: 1075235015}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain
   m_TagString: ground
   m_Icon: {fileID: 0}
@@ -1686,7 +1748,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 136
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -1695,9 +1757,9 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.07
+  m_VoxelSize: 0.016666668
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 4f8f42d803e656a4594386010c84985b, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1001 &1095283016
 PrefabInstance:
@@ -1766,6 +1828,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5c294368f908947ec9bc224ac47a13b8, type: 3}
       propertyPath: m_Name
       value: rock-type-A
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5c294368f908947ec9bc224ac47a13b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1844,6 +1910,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5c294368f908947ec9bc224ac47a13b8, type: 3}
       propertyPath: m_Name
       value: rock-type-A (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5c294368f908947ec9bc224ac47a13b8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2148,7 +2218,7 @@ GameObject:
   - component: {fileID: 1300969354}
   - component: {fileID: 1300969353}
   - component: {fileID: 1300969352}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2351,6 +2421,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: bush-type-B
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c9f72eeb45d194541bda6aaf5b1a12c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2518,7 +2592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4179479168232464708, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.51
+      value: 2.519
       objectReference: {fileID: 0}
     - target: {fileID: 4179479168232464708, guid: 9400562cae7521a4c99ca6d45bb1225d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3293,6 +3367,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 94ed5dd0a20184a0ca74da04e1e4ab35, type: 3}
       propertyPath: m_Name
       value: bush-type-A (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 94ed5dd0a20184a0ca74da04e1e4ab35, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
