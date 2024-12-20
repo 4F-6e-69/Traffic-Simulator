@@ -7,6 +7,19 @@ TagManager:
   - road
   - spawn
   - destination
+  - straight
+  - Agent
+  - ground
+  - obstacle
+  - intersectionEnter
+  - intersectionOut
+  - 4_way_intersection
+  - 3_way_intersection
+  - roundabout
+  - straight_road
+  - round_curve
+  - angle_curve
+  - Percorso
   layers:
   - Default
   - TransparentFX
@@ -15,7 +28,7 @@ TagManager:
   - Water
   - UI
   - Ferrovia
-  - 
+  - Terrein
   - DX
   - SX
   - Pedone
