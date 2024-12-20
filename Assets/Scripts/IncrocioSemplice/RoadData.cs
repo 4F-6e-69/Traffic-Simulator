@@ -52,6 +52,16 @@ public class RoadData : MonoBehaviour
         return wayPoints[1].transform.position;
     }
 
+    public bool IsFree() {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 1f);
+        foreach (Collider collider in colliders) {
+            if (collider.gameObject.CompareTag("Agent")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private bool HasTrafficLights() {
 
         if (trafficLights == null) {

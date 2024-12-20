@@ -19,11 +19,24 @@ public class CarPath : MonoBehaviour
     private List<GameObject> nodes_7 = new List<GameObject>();
     [SerializeField]
     private List<GameObject> nodes_8 = new List<GameObject>();
-
+    /*
+    [SerializeField]
+    private List<GameObject> nodes_9_0_1 = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> nodes_9_0_2 = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> nodes_9_2_0 = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> nodes_9_2_1 = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> nodes_9_1_0 = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> nodes_9_1_2 = new List<GameObject>();
+    */
 
     private int pathCount = 8;
     public List<string> GetPath() {
-        int index = Random.Range(1, pathCount);
+        int index = Random.Range(1, pathCount+1);
         Debug.Log("index: " + index);
 
         switch (index) {

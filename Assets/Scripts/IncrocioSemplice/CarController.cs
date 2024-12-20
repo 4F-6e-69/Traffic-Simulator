@@ -247,6 +247,7 @@ public class CarController : MonoBehaviour {
             Debug.Log("Percorso completato. Il veicolo si ferma.");
             currentSpeed = Mathf.Max(currentSpeed - acceleration * Time.deltaTime, 0);
             rb.linearVelocity = Vector3.zero;
+            DestroyCar();
             return;
         }
 

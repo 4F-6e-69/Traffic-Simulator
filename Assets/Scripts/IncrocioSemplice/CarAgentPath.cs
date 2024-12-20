@@ -17,6 +17,18 @@ public class CarAgentPath
 
         CarPath carPath = GameObject.Find("SimulationManager").GetComponent<CarPath>();
         StringPath = carPath.GetPath();
+        int count = 0;
+        while (!GameObject.Find(StringPath[0]).GetComponent<RoadData>().IsFree()) {
+            StringPath = carPath.GetPath();
+            count++;
+            if (count > 10) {
+                break;
+            }
+        }
+
+        if (count > 10) {
+            return;
+        }
 
         GameObject spawnRoad = GameObject.Find(StringPath[0]);
         GameObject destinationRoad = GameObject.Find(StringPath[StringPath.Count-1]);
@@ -113,7 +125,7 @@ public class CarAgentPath
             currentRoad = GameObject.Find(StringPath[i]);
             nextRoad = GameObject.Find(StringPath[i+1]);
 
-            if (currentRoad.tag == "4_way_intersection" /*|| currentRoad.tag == "3_way_intersection"*/) {
+            if (currentRoad.tag == "4_way_intersection" || currentRoad.tag == "3_way_intersection") {
                 pathNormalizerV2 = new PathNormalizerV2(nodes, previousRoad.name, currentRoad.name, nextRoad.name, 0.0f);
                 //if (!pathNormalizerV2.IsNormalized(lastPathLength)) {return false;}
                 lastPathLength = nodes.Count;
@@ -127,7 +139,7 @@ public class CarAgentPath
 
         }
         Vector3[] arrayDiVector3 = nodes.Select(node => node.Item1).ToArray();
-        DrawPoints(arrayDiVector3, Color.blue, pathRigidPath);
+        //DrawPoints(arrayDiVector3, Color.blue, pathRigidPath);
 
         return true;
     }

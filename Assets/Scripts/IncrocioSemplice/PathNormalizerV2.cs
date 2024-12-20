@@ -298,29 +298,22 @@ public class PathNormalizerV2
         float minDistanceNext = Mathf.Infinity;
         int indexMinNext = -1; 
 
-        bool isFoundPrevious = false;
-        bool isFoundNext = false;
-
         for (int i = 0; i < this.waypoints.Length; i++) {
-            if (waypoints[i].tag == "intersectionEnter") {
+            if (waypoints[i].gameObject.tag == "intersectionEnter") {
                 float distance = Vector3.Distance(waypoints[i].transform.position, previousRoad.transform.position);
                 if (distance < minDistancePrevious) {
                     minDistancePrevious = distance;
                     indexMinPrevious = i;
-                    isFoundPrevious = true;
                 }
             }
 
-            if (waypoints[i].tag == "intersectionOut") {
+            if (waypoints[i].gameObject.tag == "intersectionOut") {
                 float distance = Vector3.Distance(waypoints[i].transform.position, nextRoad.transform.position);
                 if (distance < minDistanceNext) {
                     minDistanceNext = distance;
                     indexMinNext = i;
-                    isFoundNext = true;
                 }
             }
-
-            if (isFoundPrevious && isFoundNext) {break;}
         }
 
         if (indexMinNext == -1) {
@@ -339,8 +332,8 @@ public class PathNormalizerV2
         }
 
         if (indexMinPrevious == 6) {
-            if (indexMinNext == 7) {return (0, Direction.LEFT);}
-            if (indexMinNext == 5) {return (0, Direction.RIGHT);}
+            if (indexMinNext == 7) {return (0, Direction.STRAIGHT);}
+            if (indexMinNext == 1) {return (0, Direction.LEFT);}
         }
 
         return (0, Direction.NONE);
