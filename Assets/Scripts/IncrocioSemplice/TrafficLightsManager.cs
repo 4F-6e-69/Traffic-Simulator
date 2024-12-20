@@ -13,6 +13,7 @@ public enum IntersectionState {
 public class TrafficLightsManager : MonoBehaviour
 {
     [SerializeField] private List<Light> trafficLights; 
+    [SerializeField] private List<GameObject> trafficLightsObjects;
     [SerializeField] private float switchRate = 15f;
 
     private float timer = 0f;
@@ -23,17 +24,17 @@ public class TrafficLightsManager : MonoBehaviour
         var randInt = Random.Range(1, 100);
 
         if (randInt >= 50) {
-            setRed(trafficLights[0]);
-            setGreen(trafficLights[1]);
-            setRed(trafficLights[2]);
-            setGreen(trafficLights[3]);
+            setRed(trafficLights[0], trafficLightsObjects[0]);
+            setGreen(trafficLights[1], trafficLightsObjects[1]);
+            setRed(trafficLights[2], trafficLightsObjects[2]);
+            setGreen(trafficLights[3], trafficLightsObjects[3]);
 
             currentState = IntersectionState.Vertical;
         } else {
-            setGreen(trafficLights[0]);
-            setRed(trafficLights[1]);
-            setGreen(trafficLights[2]);
-            setRed(trafficLights[3]);
+            setGreen(trafficLights[0], trafficLightsObjects[0]);
+            setRed(trafficLights[1], trafficLightsObjects[1]);
+            setGreen(trafficLights[2], trafficLightsObjects[2]);
+            setRed(trafficLights[3], trafficLightsObjects[3]);
 
             currentState = IntersectionState.Horizontal;
         }
@@ -66,13 +67,13 @@ public class TrafficLightsManager : MonoBehaviour
         switchState = true;
 
         if (currentState == IntersectionState.Vertical) {
-            setYellow(trafficLights[1]);
-            setYellow(trafficLights[3]);
+            setYellow(trafficLights[1], trafficLightsObjects[1]);
+            setYellow(trafficLights[3], trafficLightsObjects[3]);
 
             currentState = IntersectionState.VerticalOrange;
         }else {
-            setYellow(trafficLights[0]);
-            setYellow(trafficLights[2]);
+            setYellow(trafficLights[0], trafficLightsObjects[0]);
+            setYellow(trafficLights[2], trafficLightsObjects[2]);
 
             currentState = IntersectionState.HorizontalOrange;
         }
@@ -81,10 +82,10 @@ public class TrafficLightsManager : MonoBehaviour
     private void SwitchOrange () {
         prevState = currentState;
         
-        setRed(trafficLights[1]);
-        setRed(trafficLights[3]);
-        setRed(trafficLights[0]);
-        setRed(trafficLights[2]);
+        setRed(trafficLights[1], trafficLightsObjects[1]);
+        setRed(trafficLights[3], trafficLightsObjects[3]);
+        setRed(trafficLights[0], trafficLightsObjects[0]);
+        setRed(trafficLights[2], trafficLightsObjects[2]);
 
         currentState = IntersectionState.None;
         isOrange = true;
@@ -94,34 +95,37 @@ public class TrafficLightsManager : MonoBehaviour
         switchState = false; isOrange = false;
 
         if (prevState == IntersectionState.HorizontalOrange) {
-            setGreen(trafficLights[1]);
-            setGreen(trafficLights[3]);
+            setGreen(trafficLights[1], trafficLightsObjects[1]);
+            setGreen(trafficLights[3], trafficLightsObjects[3]);
 
             currentState = IntersectionState.Vertical;
         }else if (prevState == IntersectionState.VerticalOrange) {
-            setGreen(trafficLights[0]);
-            setGreen(trafficLights[2]);
+            setGreen(trafficLights[0], trafficLightsObjects[0]);
+            setGreen(trafficLights[2], trafficLightsObjects[2]);
 
             currentState = IntersectionState.Horizontal;
         }
     }
 
-    private void setRed(Light light) {
+    private void setRed(Light light, GameObject objectLight) {
         var redPosition = new Vector3(light.transform.position.x, 1.4f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(250, 0, 0);
+        objectLight.GetComponent<Renderer>().material.color = new Color(250, 0, 0, 0.1f);
     }
 
-    private void setYellow (Light light) {
+    private void setYellow (Light light, GameObject objectLight) {
         var redPosition = new Vector3(light.transform.position.x, 1.25f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(205, 215, 108);
+        objectLight.GetComponent<Renderer>().material.color = new Color(205, 215, 108, 0.1f);
     }
 
-    private void setGreen (Light light) {
+    private void setGreen (Light light, GameObject objectLight) {
         var redPosition = new Vector3(light.transform.position.x, 1.13f, light.transform.position.z);
         light.transform.position = redPosition;
         light.color = new Color(0, 255, 0);
+        objectLight.GetComponent<Renderer>().material.color = new Color(0, 255, 0, 0.1f);
     }
 
     public IntersectionState GetTrafficLightState() {

@@ -274,7 +274,7 @@ GameObject:
   m_Layer: 3
   m_Name: p_1
   m_TagString: intersectionOut
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -415,7 +415,7 @@ GameObject:
   m_Layer: 3
   m_Name: p_0
   m_TagString: intersectionEnter
-  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
