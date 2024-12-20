@@ -47,9 +47,9 @@ public class CarPath : MonoBehaviour
             case 3:
                 return PathToString(nodes_3);
             case 4:
-                return PathToString(nodes_4);*/
+                return PathToString(nodes_4);
             case 5:
-                return PathToString(nodes_5);/*
+                return PathToString(nodes_5);
             case 6:
                 return PathToString(nodes_6);
             case 7:
