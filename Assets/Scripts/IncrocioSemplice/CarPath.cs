@@ -40,6 +40,7 @@ public class CarPath : MonoBehaviour
         Debug.Log("index: " + index);
 
         switch (index) {
+            /*
             case 1:
                 return PathToString(nodes_1);
             case 2:
@@ -47,17 +48,18 @@ public class CarPath : MonoBehaviour
             case 3:
                 return PathToString(nodes_3);
             case 4:
-                return PathToString(nodes_4);
+                return PathToString(nodes_4);*/
             case 5:
-                return PathToString(nodes_5);
+                return PathToString(nodes_5);/*
             case 6:
                 return PathToString(nodes_6);
             case 7:
                 return PathToString(nodes_7);
             case 8:
-                return PathToString(nodes_8);
+                return PathToString(nodes_8);*/
+            
             default:
-                return PathToString(nodes_1);
+                return PathToString(nodes_5);
         }
     }
 
