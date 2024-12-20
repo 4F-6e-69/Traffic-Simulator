@@ -48,7 +48,7 @@ public class CarController : MonoBehaviour {
     private BoxCollider safetyDistanceCollider;
     [SerializeField] public float safetyDistance = 4f; // Distanza di sicurezza
     [SerializeField] float brakingIntensity = 10f; // Intensità del rallentamento
-    private float precedencesRadius = 10f;
+    private float precedencesRadius = 20f;
 
     private void OnEnable() {
         pathWay = new CarAgentPath();
@@ -222,6 +222,7 @@ public class CarController : MonoBehaviour {
 
     private readonly object lockObject = new object();
     private HashSet<GameObject> previousNearbyVehiclesSet = new HashSet<GameObject>(); // Memorizza l'insieme dei veicoli nel frame precedente
+    private float previousAngle = 0f, angle = 0f;
 
     // Funzione per confrontare se due set sono uguali
     private bool AreSetsEqual(HashSet<GameObject> set1, HashSet<GameObject> set2) {
@@ -244,11 +245,11 @@ public class CarController : MonoBehaviour {
         // Usa un HashSet per evitare duplicati
         HashSet<GameObject> nearbyVehiclesSet = new HashSet<GameObject>();
 
-            foreach (var vehicle in nearbyVehicles) {
-                if (vehicle.gameObject != this.gameObject) { // Salta se è il proprio collider
-                    nearbyVehiclesSet.Add(vehicle.gameObject);
-                }
+        foreach (var vehicle in nearbyVehicles) {
+            if (vehicle.gameObject != this.gameObject) { // Salta se è il proprio collider
+                nearbyVehiclesSet.Add(vehicle.gameObject);
             }
+        }
 
         bool mustYield = false;
 
@@ -263,17 +264,17 @@ public class CarController : MonoBehaviour {
             case 1: 
                 // Direzione destra, ma non completamente laterale, quindi più orientata al centro
                 targetDirection = transform.forward + transform.right * 0.5f; // Leggera deviazione a destra
-                Debug.Log($"{this.name} deve andare a destra");
+                // Debug.Log($"{this.name} deve andare a destra");
                 break;
             case 0:
                 // Direzione dritta
                 targetDirection = transform.forward;
-                Debug.Log($"{this.name} deve andare dritto");
+                // Debug.Log($"{this.name} deve andare dritto");
                 break;
             case -1:
                 // Direzione sinistra, ma non completamente laterale, quindi più orientata al centro
                 targetDirection = transform.forward - transform.right * 0.5f; // Leggera deviazione a sinistra
-                Debug.Log($"{this.name} deve andare a sinistra");
+                // Debug.Log($"{this.name} deve andare a sinistra");
                 break;
             default:
                 break; // Se non c'è direzione valida, esce dalla funzione
@@ -290,58 +291,67 @@ public class CarController : MonoBehaviour {
             Debug.DrawRay(vehiclePosition + offset, targetDirection * rayLength, rayColor);
         }
 
-        if (!AreSetsEqual(nearbyVehiclesSet, previousNearbyVehiclesSet)) {
+        if (!AreSetsEqual(nearbyVehiclesSet, previousNearbyVehiclesSet) || previousAngle != angle) {
 
             // Aggiorna il set precedente solo se è cambiato
             previousNearbyVehiclesSet = nearbyVehiclesSet;
+            previousAngle = angle;
 
             // Esegui il blocco protetto con lock se nearbyVehiclesSet è cambiato
             lock (lockObject) {
                 if (nearbyVehiclesSet.Count != 0) {
                     int i = 0;
-                    Debug.Log($"{this.name} ha trovato nella sfera questi veicoli: ");
+                    //Debug.Log($"{this.name} ha rilevato nella sfera {nearbyVehiclesSet.Count} veicoli");
                     foreach (var vehicle in nearbyVehiclesSet) {
-                        i++;
-                        Debug.Log($"    {i} - {vehicle.name}");
+                        i++; string msg = $"{this.name} - {i}/{nearbyVehiclesSet.Count} - {vehicle.name}";
 
                         // Calcola il vettore verso il veicolo rilevato
                         Vector3 toOtherVehicle = vehicle.transform.position - transform.position;
 
                         // Calcola l'angolo rispetto alla destra del veicolo
-                        float angle = Vector3.SignedAngle(transform.forward, toOtherVehicle, Vector3.up);
+                        angle = Vector3.SignedAngle(transform.forward, toOtherVehicle, Vector3.up);
+                        msg += $" - {angle}";
 
                         // Se il veicolo deve andare a destra, non deve dare precedenza
                         if (direction == 1) {
-                            Debug.Log($"{this.name} non deve dare precedenza a nessuno");
+                            msg += " - NO PRECEDENZA";
                             continue;
                         }
 
                         // Se il veicolo deve andare dritto, dà precedenza a chi viene dalla destra
                         if (direction == 0) {
-                            if (angle > 0 && angle < 90) {
-                                // Il veicolo sulla destra entra nell'incrocio
-                                Debug.Log($"{this.name} dare precedenza al veicolo dalla destra: {vehicle.name}");
+                            if (angle > 0 && angle < 90) { // Il veicolo sulla destra entra nell'incrocio
                                 mustYield = true;
+                                msg += " - SI PRECEDENZA";
+                                // Debug.Log(msg);
                                 break;
+                            } else {
+                                msg += " - NO PRECEDENZA";
                             }
                         }
 
                         // Se il veicolo deve andare a sinistra, deve dare precedenza a chi viene dalla destra e chi viene di fronte
                         if (direction == -1) {
-                            if (angle > 0 && angle < 90 || Mathf.Abs(angle) < 10) {
-                                // Il veicolo sulla destra o di fronte sta entrando nell'incrocio
-                                Debug.Log($"{this.name} dare precedenza al veicolo dalla destra o di fronte: {vehicle.name}");
+                            if (angle > 0 && angle < 90 || Mathf.Abs(angle) < 10) { // Il veicolo sulla destra o di fronte sta entrando nell'incrocio                                msg += " - Si PRECEDENZA";
+                                // Debug.Log(msg);
                                 mustYield = true;
                                 break;
+                            } else {
+                                msg += " - NO PRECEDENZA";
                             }
                         }
+
+                        // Debug.Log(msg);
                     }
+
                 }
             }
         }
 
+
         // Se il veicolo ha la precedenza, riduci la velocità
         if (mustYield) {
+            // currentSpeed = 0;
             currentSpeed = Mathf.Max(currentSpeed - acceleration * brakingIntensity * Time.deltaTime, 0);
         } else {
             // Se nessun veicolo ha precedenza, continua normalmente
