@@ -25,7 +25,7 @@ public class movimento : MonoBehaviour
     }
 
     void Update(){
-        if (target != null) {
+        if (target != null && target.transform.position != gameObject.transform.position) {
             if (Vector3.Distance(target.position, gameObject.transform.position) > 0.05f) {
                 isArrived = false;
                 agent.SetDestination(target.position);
