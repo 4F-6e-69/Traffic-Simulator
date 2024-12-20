@@ -13,24 +13,30 @@ MonoBehaviour:
   m_Name: CarDatabase
   m_EditorClassIdentifier: 
   cars:
-  - carName: Taxi
+  - carName: 
+    carId: 0
+    carPrefab: {fileID: 7769690492283750692, guid: f40e52a0c26735a46b681671fb2baa40, type: 3}
+  - carName: 
     carId: 1
     carPrefab: {fileID: 8160049463398649625, guid: 66f97e68ed002b74f8e181d1c3108e14, type: 3}
-  - carName: Police
-    carId: 1
-    carPrefab: {fileID: 6452039197999972492, guid: 813df9801c30e63479934f054db68d12, type: 3}
-  - carName: Pickup
+  - carName: 
     carId: 2
-    carPrefab: {fileID: 8663673574762740106, guid: 3f83a5a9639ce0249ac0d7df9b8c40b9, type: 3}
-  - carName: Towtruck
+    carPrefab: {fileID: 6452039197999972492, guid: 813df9801c30e63479934f054db68d12, type: 3}
+  - carName: 
     carId: 3
-    carPrefab: {fileID: 8924721617483827851, guid: 50bc8a305f45f224abedbbaaa3046911, type: 3}
-  - carName: Van
+    carPrefab: {fileID: 8663673574762740106, guid: 3f83a5a9639ce0249ac0d7df9b8c40b9, type: 3}
+  - carName: 
     carId: 4
     carPrefab: {fileID: 9181701585240893179, guid: 350735ef3b951a54ba6ec49c663c667e, type: 3}
-  - carName: Hatchback
-    carId: 1
-    carPrefab: {fileID: 7769690492283750692, guid: f40e52a0c26735a46b681671fb2baa40, type: 3}
-  - carName: Truck
+  - carName: 
     carId: 5
-    carPrefab: {fileID: 9189002782948893723, guid: bf49b486ffae2c2429b4fd41e96023c3, type: 3}
+    carPrefab: {fileID: 2116873390560433033, guid: 6f81a3f716b8d4f60b6e2bc5c8f6ecf3, type: 3}
+  - carName: 
+    carId: 6
+    carPrefab: {fileID: 5331879815992590654, guid: d253d9059948049029d8fed089207204, type: 3}
+  - carName: 
+    carId: 7
+    carPrefab: {fileID: 8886028446758582084, guid: 9c83b080573e54129ac3d9a45ca545ae, type: 3}
+  - carName: 
+    carId: 8
+    carPrefab: {fileID: 994628432591495081, guid: bef81df8612d14ba19314d7e97c320f0, type: 3}

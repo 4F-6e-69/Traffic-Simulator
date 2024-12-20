@@ -57,7 +57,7 @@ public class CarAgentPath
     }
 
 
-    public Vector3[] GetPath() {
+    public Vector3[] getPath() {
         Vector3[] points = new Vector3[nodes.Count];
         for (int i = 0; i < nodes.Count; i++) {
             points[i] = nodes[i].Item1; // Solo la posizione del punto
