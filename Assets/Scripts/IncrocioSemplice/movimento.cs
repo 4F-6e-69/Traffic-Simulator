@@ -51,6 +51,12 @@ public class movimento : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.tag == "Target") {
+            target = other.gameObject.transform;
+        }
+    }
+
     [SerializeField] private int peopleCount = 10;
 
     [ContextMenu("Create Agents")]
