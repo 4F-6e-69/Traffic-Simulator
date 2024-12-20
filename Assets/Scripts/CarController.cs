@@ -170,7 +170,7 @@ public class CarController : MonoBehaviour {
                     break;
             }
         } else {
-            if(lightIDs.Count > 1){
+            if(lightIDs.Count == 2){
                 Status nextStatus = CheckTrafficLight();
                 Debug.Log(nextStatus);
                 if(nextStatus == Status.GO) {
@@ -302,11 +302,11 @@ public class CarController : MonoBehaviour {
 
     private void HandleSafetyDistance() {
 
-        float safetyDistance = 10f; // Distanza di sicurezza
+        float safetyDistance = 6f; // Distanza di sicurezza
         float brakingIntensity = 3000f; // Intensità del rallentamento
 
         int rayCount = 30; // Numero di raggi
-        float angleRange = 180f; // Gamma dell'angolo in gradi (totale, quindi sarà diviso a metà)
+        float angleRange = 90f; // Gamma dell'angolo in gradi (totale, quindi sarà diviso a metà)
 
         Vector3 rayOrigin = transform.position + Vector3.up * 0.5f; // Origine del raggio sopra il veicolo
         float angleStep = angleRange / (rayCount - 1); // Angolo tra ogni raggio
